@@ -20,13 +20,13 @@
             style="@style/buttonFuncStyle" />
         <Button
             android:layout_weight="1"
-            android:text="@string/_leftPar"
+            android:text="@string/_par"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/buttonFuncStyle" />
         <Button
             android:layout_weight="1"
-            android:text="@string/_rightPar"
+            android:text="@string/_sign"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/buttonFuncStyle" />
@@ -52,12 +52,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/buttonNumberStyle" />
+
         <Button
             android:layout_weight="1"
             android:text="@string/_9"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            style="@style/buttonNumberStyle" />
+            style="@style/buttonNumberStyle"
+            android:id="@+id/button" />
+
         <Button
             android:layout_weight="1"
             android:text="@string/_div"

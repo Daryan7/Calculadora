@@ -10,7 +10,7 @@
 
     <style name="buttonNumberStyle">
         <item name="android:textColor">#ffffff</item>
-        <item name="android:background">#424242</item>
+        <item name="android:background">@drawable/button_num_background</item>
         <item name="android:textSize">20sp</item>
     </style>
     <style name="buttonFuncStyle">

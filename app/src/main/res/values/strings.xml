@@ -17,7 +17,7 @@
     <string name="_del">del</string>
     <string name="_comma">.</string>
     <string name="_equal">=</string>
-    <string name="_leftPar">(</string>
-    <string name="_rightPar">)</string>
+    <string name="_par">( )</string>
+    <string name="_sign">+/-</string>
     <string name="_clear">CLR</string>
 </resources>
