@@ -10,12 +10,13 @@
 
     <style name="buttonNumberStyle">
         <item name="android:textColor">#ffffff</item>
-        <item name="android:background">@drawable/ripple_effect</item>
+        <item name="android:background">@drawable/number_ripple_effect</item>
         <item name="android:textSize">20sp</item>
     </style>
+
     <style name="buttonFuncStyle">
         <item name="android:textColor">#ffffff</item>
-        <item name="android:background">#7c9790</item>
+        <item name="android:background">@drawable/func_ripple_effect</item>
         <item name="android:textSize">20sp</item>
     </style>
 
