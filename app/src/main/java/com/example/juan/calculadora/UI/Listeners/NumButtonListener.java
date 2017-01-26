@@ -5,11 +5,10 @@ import android.view.View;
 import com.example.juan.calculadora.Domain.Calculator;
 import com.example.juan.calculadora.R;
 
-public class NumButtonListener implements View.OnClickListener {
-    private Calculator calculator;
+public class NumButtonListener extends CalculatorListeners {
 
     public NumButtonListener(Calculator calculator) {
-        this.calculator = calculator;
+        super(calculator);
     }
 
     @Override

@@ -9,6 +9,7 @@
         android:paddingRight="10dp">
         <TextView
             android:id="@+id/input"
+            android:maxLines="1"
             android:text="@string/_0"
             android:textSize="35sp"
             android:layout_weight="1"
