@@ -2,6 +2,7 @@ package com.example.juan.calculadora.UI;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.juan.calculadora.Domain.Calculator;
@@ -12,16 +13,14 @@ import com.example.juan.calculadora.UI.Listeners.OperandButtonListener;
 
 
 public class CalculatorActivity extends AppCompatActivity {
-    TextView inputField;
-    Calculator calculator;
+    private TextView inputField;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
         super.onCreate(savedInstaceState);
         setContentView(R.layout.activity_test);
-
         inputField = (TextView)findViewById(R.id.input);
-        calculator = new Calculator(this);
+        Calculator calculator = new Calculator(this);
         NumButtonListener numListener = new NumButtonListener(calculator);
         OperandButtonListener operandListener = new OperandButtonListener(calculator);
         FuncButtonListener funcListener = new FuncButtonListener(calculator);
@@ -52,11 +51,17 @@ public class CalculatorActivity extends AppCompatActivity {
 
     public void newSymbol(String symbol) {
         String fieldText = inputField.getText().toString();
+        if (fieldText.equals("0")) {
+            fieldText = "";
+        }
         inputField.setText(fieldText + symbol);
     }
 
     public void newSymbol(int resId) {
         String fieldText = inputField.getText().toString();
+        if (fieldText.equals("0")) {
+            fieldText = "";
+        }
         inputField.setText(fieldText + getResources().getString(resId));
     }
 

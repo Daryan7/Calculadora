@@ -27,7 +27,6 @@ public class OperandButtonListener extends CalculatorListeners {
                 break;
             default: throw new Error("Invalid id: " + view.getId());
         }
-        firstInput = true;
     }
 
 }
