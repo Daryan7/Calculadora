@@ -2,7 +2,6 @@ package com.example.juan.calculadora.UI;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.example.juan.calculadora.Domain.Calculator;
@@ -14,11 +13,13 @@ import com.example.juan.calculadora.UI.Listeners.OperandButtonListener;
 
 public class CalculatorActivity extends AppCompatActivity {
     private TextView inputField;
+    String actualString;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
         super.onCreate(savedInstaceState);
         setContentView(R.layout.activity_test);
+        actualString = "0";
         inputField = (TextView)findViewById(R.id.input);
         Calculator calculator = new Calculator(this);
         NumButtonListener numListener = new NumButtonListener(calculator);
@@ -50,25 +51,26 @@ public class CalculatorActivity extends AppCompatActivity {
     }
 
     public void newSymbol(String symbol) {
-        String fieldText = inputField.getText().toString();
-        if (fieldText.equals("0")) {
-            fieldText = "";
+        if (actualString.equals("0")) {
+            actualString = "";
         }
-        inputField.setText(fieldText + symbol);
+        inputField.setText(actualString + symbol);
     }
 
     public void newSymbol(int resId) {
-        String fieldText = inputField.getText().toString();
-        if (fieldText.equals("0")) {
-            fieldText = "";
+        if (actualString.equals("0")) {
+            actualString = "";
         }
-        inputField.setText(fieldText + getResources().getString(resId));
+        inputField.setText(actualString + getResources().getString(resId));
     }
 
     public void removeSymbol() {
-        String fieldText = inputField.getText().toString();
-        if (fieldText.length() > 1) inputField.setText(fieldText.substring(0, fieldText.length()-1));
+        if (actualString.length() > 1) inputField.setText(actualString.substring(0, actualString.length()-1));
         else inputField.setText(getResources().getString(R.string._0));
+    }
+
+    public String getTextField() {
+        return actualString;
     }
 
     public void clearField() {
