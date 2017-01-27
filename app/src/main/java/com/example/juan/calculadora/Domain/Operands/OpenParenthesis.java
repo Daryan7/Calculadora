@@ -26,6 +26,6 @@ public class OpenParenthesis extends Component {
 
     @Override
     public boolean isCompatibleWith(Component rightComponent) {
-        return (rightComponent instanceof MyNumber) || (rightComponent instanceof OpenParenthesis);
+        return (rightComponent instanceof MyNumber) || (rightComponent instanceof OpenParenthesis) || (rightComponent instanceof Subs);
     }
 }

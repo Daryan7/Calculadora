@@ -15,6 +15,10 @@ public class MyNumber extends Component {
         return num;
     }
 
+    public void setNegative() {
+        num = num * -1;
+    }
+
     @Override
     public void execute(Stack<Double> numStack, Stack<Component> componentStack) {
         numStack.push(num);
@@ -22,6 +26,9 @@ public class MyNumber extends Component {
 
     @Override
     public boolean isCompatibleWith(Component rightComponent) {
+        if (rightComponent instanceof Subs) {
+            ((Subs)rightComponent).hasNumberAtLeftSide();
+        }
         return (rightComponent instanceof MyNumber) || (rightComponent instanceof Operand) || (rightComponent instanceof CloseParenthesis);
     }
 }

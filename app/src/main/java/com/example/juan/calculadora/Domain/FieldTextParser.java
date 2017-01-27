@@ -111,13 +111,13 @@ public class FieldTextParser {
                     return new Div();
             }
         }*/
-        if (currentIndex >= text.length()) return null;
+        if (currentIndex >= text.length()) throw new WrongExpression();
         char currentSymbol = text.charAt(currentIndex);
         Log.v("Parser", "Parsing " + currentSymbol + " at index " + currentIndex);
         if (isNumber(currentSymbol)) {
             return readNumber();
         }
-        Component component = null;
+        Component component;
         switch (currentSymbol) {
             case ')':
                 component = new CloseParenthesis();

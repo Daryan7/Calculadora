@@ -32,8 +32,4 @@ public abstract class Operand extends Component {
     public boolean isCompatibleWith(Component rightComponent) {
         return (rightComponent instanceof MyNumber) || (rightComponent instanceof OpenParenthesis);
     }
-
-    public int getPriority() {
-        return priority;
-    }
 }
