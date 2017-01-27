@@ -1,10 +1,9 @@
 package com.example.juan.calculadora.Domain.Operands;
 
+
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 
-public abstract class Operand extends Component {
-    int priority;
-    public abstract double operate(double left, double right);
+public class OpenParenthesis extends Component {
 
     @Override
     public void execute(Stack<Double> numStack, Stack<Component> componentStack) {
@@ -14,9 +13,5 @@ public abstract class Operand extends Component {
     @Override
     public boolean isCompatibleWith(Component rightComponent) {
         return (rightComponent instanceof MyNumber) || (rightComponent instanceof OpenParenthesis);
-    }
-
-    public int getPriority() {
-        return priority;
     }
 }

@@ -2,6 +2,7 @@ package com.example.juan.calculadora.Domain;
 
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 import com.example.juan.calculadora.Domain.Operands.Component;
+import com.example.juan.calculadora.Domain.Operands.OpenParenthesis;
 import com.example.juan.calculadora.Domain.Operands.Operand;
 import com.example.juan.calculadora.R;
 import com.example.juan.calculadora.UI.CalculatorActivity;
@@ -9,7 +10,6 @@ import com.example.juan.calculadora.UI.CalculatorActivity;
 public class Calculator {
 
     private CalculatorActivity calculatorActivity;
-    private Stack<Component> componentStack;
 
     public Calculator(CalculatorActivity calculatorActivity) {
         this.calculatorActivity = calculatorActivity;
@@ -43,23 +43,41 @@ public class Calculator {
         calculatorActivity.clearField();
     }
 
-    public void calculate() {
-        String field = calculatorActivity.getTextField();
-        Stack<Double> numStack = new Stack<>();
-        Stack<Operand> operandStack = new Stack<>();
-        int lastIndex = 0;
-
-        for (int i = 0; i < field.length(); ++i) {
-            char actualSymbol = field.charAt(i);
-            if (actualSymbol == '+' || actualSymbol == '-' || actualSymbol == '*' || actualSymbol != '÷') {
-                String number = field.substring(lastIndex, i);
-                if (!number.equals("")) {
-                    double res = Double.parseDouble(field.substring(lastIndex, i));
-                    numStack.push(res);
-                }
-            }
-
+    public static void executeStacks(Stack<Double> numStack, Stack<Operand> operandStack) {
+        while (!operandStack.isEmpty()) {
+            double leftNumber = numStack.getPop();
+            double rightNumber = numStack.getPop();
+            Operand currentOperand = operandStack.getPop();
+            double result = currentOperand.operate(leftNumber, rightNumber);
+            numStack.push(result);
         }
+    }
+
+    public static void executeStackUntilParenthesis(Stack<Double> numStack, Stack<Component> operandStack) {
+        Component currentOperand = operandStack.getPop();
+        while (!(currentOperand instanceof OpenParenthesis)) {
+            double leftNumber = numStack.getPop();
+            double rightNumber = numStack.getPop();
+            double result = ((Operand)currentOperand).operate(leftNumber, rightNumber);
+            numStack.push(result);
+            currentOperand = operandStack.getPop();
+        }
+    }
+
+    public void calculate() {
+        Stack<Double> numStack = new Stack<>();
+        Stack<Component> operandStack = new Stack<>();
+        FieldTextParser parser = new FieldTextParser(calculatorActivity.getTextField());
+
+        Component lastComponent = parser.nextComponent();
+        lastComponent.execute(numStack, operandStack);
+        while (parser.haveComponentsLeft()) {
+            Component component = parser.nextComponent();
+            if (lastComponent.isCompatibleWith(component)) {
+                component.execute(numStack, operandStack);
+            }
+        }
+
     }
 
     public void comma() {

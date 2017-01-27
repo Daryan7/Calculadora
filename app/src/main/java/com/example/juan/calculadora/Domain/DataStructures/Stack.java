@@ -35,6 +35,17 @@ public class Stack<E> {
         }
     }
 
+    public E getPop() {
+        E element = null;
+        if (top != null) {
+            element = top.element;
+            top = top.next;
+            --numElements;
+        }
+        return element;
+    }
+
+
     public boolean isEmpty() {
         return numElements == 0;
     }
