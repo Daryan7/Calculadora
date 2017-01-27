@@ -91,6 +91,7 @@ public class Calculator {
                 component.execute(numStack, operandStack);
             }
             else {
+                Log.v("Calc", "Not compatible");
                 calculatorActivity.onError();
                 return;
             };

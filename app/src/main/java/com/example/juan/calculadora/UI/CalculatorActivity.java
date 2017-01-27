@@ -91,7 +91,7 @@ public class CalculatorActivity extends AppCompatActivity {
     }
 
     public void onError() {
-        Toast.makeText(this, "Worng expression", Toast.LENGTH_SHORT);
+        Toast.makeText(this, "Worng expression", Toast.LENGTH_SHORT).show();
     }
 
     public void setResult(String number) {

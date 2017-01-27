@@ -1,6 +1,8 @@
 package com.example.juan.calculadora.Domain;
 
 
+import android.util.Log;
+
 import com.example.juan.calculadora.Domain.Operands.CloseParenthesis;
 import com.example.juan.calculadora.Domain.Operands.Component;
 import com.example.juan.calculadora.Domain.Operands.Div;
@@ -18,13 +20,8 @@ public class FieldTextParser {
         return symbol == '0' || symbol == '1' || symbol == '2' || symbol == '3'
                 || symbol == '4' || symbol == '5' || symbol == '6' || symbol == '7'
                 || symbol == '8' || symbol == '9';
-        /*Log.d("Chars", "" + symbol);
-        return symbol >= 48 || symbol <= 57;*/
     }
 
-    private boolean isOperand(char symbol) {
-        return symbol == '+' || symbol == '-' || symbol == 'x' || symbol == '÷';
-    }
 
     public FieldTextParser(String text) {
         this.text = text;
@@ -115,6 +112,7 @@ public class FieldTextParser {
         }*/
         if (currentIndex >= text.length()) return null;
         char currentSymbol = text.charAt(currentIndex);
+        Log.v("Parser", "Parsing " + currentSymbol + " at index " + currentIndex);
         if (isNumber(currentSymbol)) {
             return readNumber();
         }
@@ -139,6 +137,7 @@ public class FieldTextParser {
                 component = new Div();
                 break;
         }
+        ++currentIndex;
         return component;
     }
 }
