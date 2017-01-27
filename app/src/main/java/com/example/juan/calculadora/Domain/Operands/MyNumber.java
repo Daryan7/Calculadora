@@ -1,10 +1,8 @@
 package com.example.juan.calculadora.Domain.Operands;
 
-import android.util.Log;
-
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 
-public class MyNumber extends Component {
+public class MyNumber extends Token {
     private double num;
 
     public MyNumber(String number) {
@@ -20,15 +18,15 @@ public class MyNumber extends Component {
     }
 
     @Override
-    public void execute(Stack<Double> numStack, Stack<Component> componentStack) {
+    public void execute(Stack<Double> numStack, Stack<Token> componentStack) {
         numStack.push(num);
     }
 
     @Override
-    public boolean isCompatibleWith(Component rightComponent) {
-        if (rightComponent instanceof Subs) {
-            ((Subs)rightComponent).hasNumberAtLeftSide();
+    public boolean isCompatibleWith(Token rightToken) {
+        if (rightToken instanceof Subs) {
+            ((Subs) rightToken).hasNumberAtLeftSide();
         }
-        return (rightComponent instanceof MyNumber) || (rightComponent instanceof Operand) || (rightComponent instanceof CloseParenthesis);
+        return (rightToken instanceof MyNumber) || (rightToken instanceof Operand) || (rightToken instanceof CloseParenthesis);
     }
 }

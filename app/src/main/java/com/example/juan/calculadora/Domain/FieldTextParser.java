@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 import com.example.juan.calculadora.Domain.Operands.CloseParenthesis;
-import com.example.juan.calculadora.Domain.Operands.Component;
+import com.example.juan.calculadora.Domain.Operands.Token;
 import com.example.juan.calculadora.Domain.Operands.Div;
 import com.example.juan.calculadora.Domain.Operands.Mul;
 import com.example.juan.calculadora.Domain.Operands.MyNumber;
@@ -29,7 +29,7 @@ public class FieldTextParser {
         currentIndex = 0;
     }
 
-    public boolean haveComponentsLeft() {
+    public boolean haveTokensLeft() {
         return currentIndex < text.length();
     }
 
@@ -41,105 +41,36 @@ public class FieldTextParser {
         return new MyNumber(text.substring(initialIndex, currentIndex));
     }
 
-    private MyNumber readNegativeNumber() {
-        int initialIndex = currentIndex;
-        ++currentIndex;
-        while (currentIndex < text.length() && isNumber(text.charAt(currentIndex))) {
-            ++currentIndex;
-        }
-        return new MyNumber(text.substring(initialIndex, currentIndex));
-    }
-
-    public Component nextComponent() throws WrongExpression {
-        /*char currentChar = text.charAt(currentIndex);
-        Log.v("chars", "Current char " + currentChar + " at index " + currentIndex);
-        if (currentIndex == 0) {
-            if (currentChar == '-') {
-                if (currentIndex + 1 < text.length()) {
-                    if (isNumber(text.charAt(currentIndex + 1))) {
-                        return readNegativeNumber();
-                    } else if (text.charAt(currentIndex + 1) == '(') {
-                        currentIndex += 2;
-                        ++openPar;
-                        return new OpenParenthesis(true);
-                    } else return null;
-                } else return null;
-            }
-            if (isOperand(currentChar)) {
-                return null;
-            }
-        }
-        if (currentChar == ')') {
-            if (openPar == 0) return null;
-            else {
-                --openPar;
-                ++currentIndex;
-                return new CloseParenthesis();
-            }
-        } else if (currentChar == '(') {
-            Log.d("Chars", "is open partenthesis");
-            ++openPar;
-            ++currentIndex;
-            return new OpenParenthesis(false);
-        } else if (isOperand(currentChar)) {
-            char prevSymbol = text.charAt(currentIndex - 1);
-            if (currentIndex + 1 < text.length()) return null;
-            char nextSymbol = text.charAt(currentIndex + 1);
-            if (currentChar == '-') {
-                if (prevSymbol == '(') {
-                    if (isNumber(nextSymbol)) {
-                        return readNegativeNumber();
-                    }
-                    else if (nextSymbol == '(') {
-                        ++openPar;
-                        currentIndex += 2;
-                        return new OpenParenthesis(true);
-                    }
-                    else return null;
-                }
-            }
-            if (prevSymbol == ')' || isNumber(prevSymbol) && nextSymbol == '(' || isNumber(')'))
-            ++currentIndex;
-            switch (currentChar) {
-                case '+':
-                    return new Sum();
-                case '-':
-                    return new Subs();
-                case 'x':
-                    return new Mul();
-                case '÷':
-                    return new Div();
-            }
-        }*/
-        if (currentIndex >= text.length()) throw new WrongExpression();
+    public Token nextToken() throws WrongExpression {
+        if (currentIndex >= text.length()) throw new WrongExpression("Tried to parse after end of expression, index found " + currentIndex + " but text has length " + text.length());
         char currentSymbol = text.charAt(currentIndex);
-        Log.v("Parser", "Parsing " + currentSymbol + " at index " + currentIndex);
+        Log.d("Parser", "Parsing " + currentSymbol + " at index " + currentIndex);
         if (isNumber(currentSymbol)) {
             return readNumber();
         }
-        Component component;
+        Token token;
         switch (currentSymbol) {
             case ')':
-                component = new CloseParenthesis();
+                token = new CloseParenthesis();
                 break;
             case '(':
-                component = new OpenParenthesis();
+                token = new OpenParenthesis();
                 break;
             case '+':
-                component = new Sum();
+                token = new Sum();
                 break;
             case '-':
-                component = new Subs();
+                token = new Subs();
                 break;
             case 'x':
-                component = new Mul();
+                token = new Mul();
                 break;
             case '÷':
-                component = new Div();
+                token = new Div();
                 break;
-            default: throw new WrongExpression();
+            default: throw new WrongExpression("Found invalid symbol while parsing: " + currentSymbol);
         }
         ++currentIndex;
-        return component;
+        return token;
     }
 }

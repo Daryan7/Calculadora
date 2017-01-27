@@ -10,7 +10,6 @@ public class Div extends Operand {
 
     @Override
     public double operate(double left, double right) {
-        Log.d("div", "" + left + "/" + right);
         return left/right;
     }
 }

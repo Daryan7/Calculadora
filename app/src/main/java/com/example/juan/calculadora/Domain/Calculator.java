@@ -5,7 +5,8 @@ import android.util.Log;
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 import com.example.juan.calculadora.Domain.Operands.CloseParenthesis;
-import com.example.juan.calculadora.Domain.Operands.Component;
+import com.example.juan.calculadora.Domain.Operands.MyNumber;
+import com.example.juan.calculadora.Domain.Operands.Token;
 import com.example.juan.calculadora.Domain.Operands.OpenParenthesis;
 import com.example.juan.calculadora.Domain.Operands.Operand;
 import com.example.juan.calculadora.Domain.Operands.Subs;
@@ -48,43 +49,25 @@ public class Calculator {
         calculatorActivity.clearField();
     }
 
-    public static void executeStacks(Stack<Double> numStack, Stack<Component> operandStack) throws WrongExpression {
+    public static void executeStacks(Stack<Double> numStack, Stack<Token> operandStack) {
         while (!operandStack.isEmpty()) {
-            double rightNumber = 0;
-            double leftNumber = 0;
-            Component currentOperand = null;
-            try {
-                rightNumber = numStack.getPop();
-                leftNumber = numStack.getPop();
-                currentOperand = operandStack.getPop();
-            }
-            catch (NullPointerException exception) {
-                throw new WrongExpression();
-            }
-            Log.v("c", "" + currentOperand.getClass());
+            double rightNumber = numStack.getPop();
+            double leftNumber = numStack.getPop();
+            Token currentOperand = operandStack.getPop();
             double result = ((Operand)currentOperand).operate(leftNumber, rightNumber);
             numStack.push(result);
         }
     }
 
-    public static void executeStackUntilParenthesis(Stack<Double> numStack, Stack<Component> operandStack) throws WrongExpression {
-        Component currentOperand = operandStack.getPop();
+    public static void executeStackUntilParenthesis(Stack<Double> numStack, Stack<Token> operandStack) {
+        Token currentOperand = operandStack.getPop();
         while (currentOperand != null && !(currentOperand instanceof OpenParenthesis)) {
-            double rightNumber = 0;
-            double leftNumber = 0;
-            try {
-                rightNumber = numStack.getPop();
-                leftNumber = numStack.getPop();
-            }
-            catch (NullPointerException exception) {
-                throw new WrongExpression();
-            }
+            double rightNumber = numStack.getPop();
+            double leftNumber = numStack.getPop();
             double result = ((Operand)currentOperand).operate(leftNumber, rightNumber);
             numStack.push(result);
-            Log.d("c", "current operand " + currentOperand.getClass());
             currentOperand = operandStack.getPop();
         }
-        if (currentOperand == null) throw new WrongExpression();
         if (((OpenParenthesis)currentOperand).isResultNegative()) {
             double top = numStack.getPop();
             numStack.push(top*-1);
@@ -92,26 +75,35 @@ public class Calculator {
     }
 
     public void calculate() {
+        OpenParenthesis.resetCounter();
         Stack<Double> numStack = new Stack<>();
-        Stack<Component> operandStack = new Stack<>();
+        Stack<Token> operandStack = new Stack<>();
         FieldTextParser parser = new FieldTextParser(calculatorActivity.getTextField());
         try {
-            Component lastComponent = parser.nextComponent();
-            lastComponent.execute(numStack, operandStack);
-            if ((lastComponent instanceof Operand && !(lastComponent instanceof Subs)) || lastComponent instanceof CloseParenthesis) throw new WrongExpression();
-            Log.v("Execution", "Executing component " + lastComponent.getClass());
-            while (parser.haveComponentsLeft()) {
-                Component component = parser.nextComponent();
-                if (lastComponent.isCompatibleWith(component)) {
-                    Log.v("Execution", "Executing component " + component.getClass());
-                    component.execute(numStack, operandStack);
-                }
-                lastComponent = component;
+            Token lastToken = parser.nextToken();
+            if ((lastToken instanceof Operand && !(lastToken instanceof Subs)) || lastToken instanceof CloseParenthesis) {
+                throw new WrongExpression("Syntax error at beginning of expression: found " + lastToken.getClass() + ", which is invalid");
             }
+            lastToken.execute(numStack, operandStack);
+            Log.d("Execution", "Executing component " + lastToken.getClass());
+            while (parser.haveTokensLeft()) {
+                Token token = parser.nextToken();
+                if (lastToken.isCompatibleWith(token)) {
+                    Log.d("Execution", "Executing token " + token.getClass());
+                    token.execute(numStack, operandStack);
+                }
+                else throw new WrongExpression("Syntax error while treating expression: found " + lastToken.getClass() + " with " + token.getClass() + ", which is invalid");
+                lastToken = token;
+            }
+            if (!(lastToken instanceof MyNumber || lastToken instanceof CloseParenthesis)) {
+                throw new WrongExpression("Syntax error at ending of expression: found " + lastToken.getClass() + ", which is invalid");
+            }
+            if (!OpenParenthesis.goodParenthesis()) throw new WrongExpression("Parenthesis not well written");
             executeStacks(numStack, operandStack);
             calculatorActivity.setResult(Double.toString(numStack.getTop()));
         }
         catch (WrongExpression exception) {
+            Log.d("Exception", exception.getMessage());
             calculatorActivity.onError();
         }
     }

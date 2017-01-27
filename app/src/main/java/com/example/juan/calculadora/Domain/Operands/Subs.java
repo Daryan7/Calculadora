@@ -20,20 +20,19 @@ public class Subs extends Operand {
     }
 
     @Override
-    public boolean isCompatibleWith(Component rightComponent) {
+    public boolean isCompatibleWith(Token rightToken) {
         if (!_hasNumberAtLeftSide) {
-            if (rightComponent instanceof OpenParenthesis) {
-                ((OpenParenthesis) rightComponent).setNegativeResult();
-            }
-            else if (rightComponent instanceof MyNumber) {
-                ((MyNumber) rightComponent).setNegative();
+            if (rightToken instanceof OpenParenthesis) {
+                ((OpenParenthesis) rightToken).setNegativeResult();
+            } else if (rightToken instanceof MyNumber) {
+                ((MyNumber) rightToken).setNegative();
             }
         }
-        return super.isCompatibleWith(rightComponent);
+        return super.isCompatibleWith(rightToken);
     }
 
     @Override
-    public void execute(Stack<Double> numStack, Stack<Component> componentStack) {
+    public void execute(Stack<Double> numStack, Stack<Token> componentStack) {
         if (_hasNumberAtLeftSide) super.execute(numStack, componentStack);
     }
 

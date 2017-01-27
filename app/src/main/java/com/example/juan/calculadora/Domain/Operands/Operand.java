@@ -2,26 +2,26 @@ package com.example.juan.calculadora.Domain.Operands;
 
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 
-public abstract class Operand extends Component {
+public abstract class Operand extends Token {
     int priority;
     public abstract double operate(double left, double right);
 
     @Override
-    public void execute(Stack<Double> numStack, Stack<Component> componentStack) {
+    public void execute(Stack<Double> numStack, Stack<Token> componentStack) {
         while (!(componentStack.isEmpty())) {
-            Component component = componentStack.getTop();
-            if (component instanceof OpenParenthesis) {
+            Token token = componentStack.getTop();
+            if (token instanceof OpenParenthesis) {
                 componentStack.push(this);
                 return;
             }
-            Operand operand = (Operand)component;
+            Operand operand = (Operand) token;
             if (operand.priority < priority){
                 componentStack.push(this);
                 return;
             }
             double rightNumber = numStack.getPop();
             double leftNumber = numStack.getPop();
-            double result = ((Operand)component).operate(leftNumber, rightNumber);
+            double result = ((Operand) token).operate(leftNumber, rightNumber);
             numStack.push(result);
             componentStack.pop();
         }
@@ -29,7 +29,7 @@ public abstract class Operand extends Component {
     }
 
     @Override
-    public boolean isCompatibleWith(Component rightComponent) {
-        return (rightComponent instanceof MyNumber) || (rightComponent instanceof OpenParenthesis);
+    public boolean isCompatibleWith(Token rightToken) {
+        return (rightToken instanceof MyNumber) || (rightToken instanceof OpenParenthesis);
     }
 }
