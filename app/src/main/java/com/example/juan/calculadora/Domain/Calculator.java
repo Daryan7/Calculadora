@@ -43,12 +43,12 @@ public class Calculator {
         calculatorActivity.clearField();
     }
 
-    public static void executeStacks(Stack<Double> numStack, Stack<Operand> operandStack) {
+    public static void executeStacks(Stack<Double> numStack, Stack<Component> operandStack) {
         while (!operandStack.isEmpty()) {
             double leftNumber = numStack.getPop();
             double rightNumber = numStack.getPop();
-            Operand currentOperand = operandStack.getPop();
-            double result = currentOperand.operate(leftNumber, rightNumber);
+            Component currentOperand = operandStack.getPop();
+            double result = ((Operand)currentOperand).operate(leftNumber, rightNumber);
             numStack.push(result);
         }
     }
@@ -77,18 +77,18 @@ public class Calculator {
                 component.execute(numStack, operandStack);
             }
         }
-
+        executeStacks(numStack, operandStack);
     }
 
     public void comma() {
         calculatorActivity.newSymbol(R.string._comma);
     }
 
-    public void changeSign() {
-        calculatorActivity.newSymbol("-");
+    public void closePar() {
+        calculatorActivity.newSymbol("(");
     }
 
-    public void parenthesis() {
-
+    public void openPar() {
+        calculatorActivity.newSymbol(")");
     }
 }

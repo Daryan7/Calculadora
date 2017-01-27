@@ -14,7 +14,7 @@ public class MyNumber extends Component {
     }
 
     @Override
-    public void execute(Stack<Double> numStack, Stack<Operand> componentStack) {
+    public void execute(Stack<Double> numStack, Stack<Component> componentStack) {
         numStack.push(num);
     }
 

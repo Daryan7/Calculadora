@@ -7,7 +7,7 @@ public class OpenParenthesis extends Component {
 
     @Override
     public void execute(Stack<Double> numStack, Stack<Component> componentStack) {
-
+        componentStack.push(this);
     }
 
     @Override

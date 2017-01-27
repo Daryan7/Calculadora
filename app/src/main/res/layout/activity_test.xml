@@ -39,16 +39,16 @@
             android:layout_height="match_parent"
             style="@style/buttonFuncStyle" />
         <Button
-            android:id="@+id/_par"
+            android:id="@+id/_openPar"
             android:layout_weight="1"
-            android:text="@string/_par"
+            android:text="@string/_openPar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/buttonFuncStyle" />
         <Button
-            android:id="@+id/_sign"
+            android:id="@+id/_closePar"
             android:layout_weight="1"
-            android:text="@string/_sign"
+            android:text="@string/_closePar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/buttonFuncStyle" />

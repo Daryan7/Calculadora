@@ -23,11 +23,11 @@ public class FuncButtonListener extends CalculatorListeners {
             case R.id._comma:
                 calculator.comma();
                 break;
-            case R.id._sign:
-                calculator.changeSign();
+            case R.id._closePar:
+                calculator.closePar();
                 break;
-            case R.id._par:
-                calculator.parenthesis();
+            case R.id._openPar:
+                calculator.openPar();
                 break;
             case R.id._equal:
                 calculator.calculate();

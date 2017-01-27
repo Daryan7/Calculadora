@@ -45,8 +45,8 @@ public class CalculatorActivity extends AppCompatActivity {
         findViewById(R.id._CLR).setOnClickListener(funcListener);
         findViewById(R.id._del).setOnClickListener(funcListener);
         findViewById(R.id._equal).setOnClickListener(funcListener);
-        findViewById(R.id._par).setOnClickListener(funcListener);
-        findViewById(R.id._sign).setOnClickListener(funcListener);
+        findViewById(R.id._openPar).setOnClickListener(funcListener);
+        findViewById(R.id._closePar).setOnClickListener(funcListener);
         findViewById(R.id._comma).setOnClickListener(funcListener);
     }
 

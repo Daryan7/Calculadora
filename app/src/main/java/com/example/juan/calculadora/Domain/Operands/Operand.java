@@ -8,7 +8,22 @@ public abstract class Operand extends Component {
 
     @Override
     public void execute(Stack<Double> numStack, Stack<Component> componentStack) {
-
+        while (!(componentStack.isEmpty())) {
+            Component component = componentStack.getPop();
+            if (component instanceof OpenParenthesis) {
+                componentStack.push(this);
+                return;
+            }
+            Operand operand = (Operand)component;
+            if (operand.priority < priority){
+                componentStack.push(this);
+                return;
+            }
+            double leftNumber = numStack.getPop();
+            double rightNumber = numStack.getPop();
+            ((Operand)component).operate(leftNumber, rightNumber);
+        }
+        componentStack.push(this);
     }
 
     @Override
