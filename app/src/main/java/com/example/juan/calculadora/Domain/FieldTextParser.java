@@ -3,6 +3,7 @@ package com.example.juan.calculadora.Domain;
 
 import android.util.Log;
 
+import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 import com.example.juan.calculadora.Domain.Operands.CloseParenthesis;
 import com.example.juan.calculadora.Domain.Operands.Component;
 import com.example.juan.calculadora.Domain.Operands.Div;
@@ -49,7 +50,7 @@ public class FieldTextParser {
         return new MyNumber(text.substring(initialIndex, currentIndex));
     }
 
-    public Component nextComponent() {
+    public Component nextComponent() throws WrongExpression {
         /*char currentChar = text.charAt(currentIndex);
         Log.v("chars", "Current char " + currentChar + " at index " + currentIndex);
         if (currentIndex == 0) {
@@ -136,6 +137,7 @@ public class FieldTextParser {
             case '÷':
                 component = new Div();
                 break;
+            default: throw new WrongExpression();
         }
         ++currentIndex;
         return component;

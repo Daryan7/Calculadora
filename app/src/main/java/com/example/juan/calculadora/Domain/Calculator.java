@@ -3,6 +3,7 @@ package com.example.juan.calculadora.Domain;
 import android.util.Log;
 
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
+import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 import com.example.juan.calculadora.Domain.Operands.Component;
 import com.example.juan.calculadora.Domain.Operands.OpenParenthesis;
 import com.example.juan.calculadora.Domain.Operands.Operand;
@@ -56,7 +57,7 @@ public class Calculator {
         }
     }
 
-    public static void executeStackUntilParenthesis(Stack<Double> numStack, Stack<Component> operandStack) {
+    public static void executeStackUntilParenthesis(Stack<Double> numStack, Stack<Component> operandStack) throws WrongExpression {
         Component currentOperand = operandStack.getPop();
         while (currentOperand != null && !(currentOperand instanceof OpenParenthesis)) {
             double rightNumber = numStack.getPop();
@@ -66,39 +67,35 @@ public class Calculator {
             Log.d("c", "current operand " + currentOperand.getClass());
             currentOperand = operandStack.getPop();
         }
+        if (currentOperand == null) throw new WrongExpression();
     }
 
     public void calculate() {
         Stack<Double> numStack = new Stack<>();
         Stack<Component> operandStack = new Stack<>();
         FieldTextParser parser = new FieldTextParser(calculatorActivity.getTextField());
-
-        Component lastComponent = parser.nextComponent();
-        if (lastComponent == null) {
+        try {
+            Component lastComponent = parser.nextComponent();
+            lastComponent.execute(numStack, operandStack);
+            Log.v("Execution", "Executing component " + lastComponent.getClass());
+            while (parser.haveComponentsLeft()) {
+                Component component = parser.nextComponent();
+                if (component == null) {
+                    calculatorActivity.onError();
+                    return;
+                }
+                if (lastComponent.isCompatibleWith(component)) {
+                    Log.v("Execution", "Executing component " + component.getClass());
+                    component.execute(numStack, operandStack);
+                }
+                lastComponent = component;
+            }
+            executeStacks(numStack, operandStack);
+            calculatorActivity.setResult(Double.toString(numStack.getTop()));
+        }
+        catch (WrongExpression exception) {
             calculatorActivity.onError();
-            return;
         }
-        lastComponent.execute(numStack, operandStack);
-        Log.v("Execution", "Executing component " + lastComponent.getClass());
-        while (parser.haveComponentsLeft()) {
-            Component component = parser.nextComponent();
-            if (component == null) {
-                calculatorActivity.onError();
-                return;
-            }
-            if (lastComponent.isCompatibleWith(component)) {
-                Log.v("Execution", "Executing component " + component.getClass());
-                component.execute(numStack, operandStack);
-            }
-            else {
-                Log.v("Calc", "Not compatible");
-                calculatorActivity.onError();
-                return;
-            };
-            lastComponent = component;
-        }
-        executeStacks(numStack, operandStack);
-        calculatorActivity.setResult(Double.toString(numStack.getTop()));
     }
 
     public void comma() {
