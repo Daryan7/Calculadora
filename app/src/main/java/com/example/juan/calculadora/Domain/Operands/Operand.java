@@ -9,7 +9,7 @@ public abstract class Operand extends Component {
     @Override
     public void execute(Stack<Double> numStack, Stack<Component> componentStack) {
         while (!(componentStack.isEmpty())) {
-            Component component = componentStack.getPop();
+            Component component = componentStack.getTop();
             if (component instanceof OpenParenthesis) {
                 componentStack.push(this);
                 return;
@@ -19,9 +19,11 @@ public abstract class Operand extends Component {
                 componentStack.push(this);
                 return;
             }
-            double leftNumber = numStack.getPop();
             double rightNumber = numStack.getPop();
-            ((Operand)component).operate(leftNumber, rightNumber);
+            double leftNumber = numStack.getPop();
+            double result = ((Operand)component).operate(leftNumber, rightNumber);
+            numStack.push(result);
+            componentStack.pop();
         }
         componentStack.push(this);
     }

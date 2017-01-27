@@ -19,12 +19,15 @@
     </TableRow>
 
     <TableRow
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp">
         <TextView
             android:id="@+id/result"
             android:textSize="30sp"
             android:layout_height="match_parent"
             android:layout_gravity="end|center_vertical"
+            android:gravity="end|center_vertical"
             android:layout_weight="1"
             android:layout_width="0dp" />
     </TableRow>

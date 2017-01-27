@@ -1,5 +1,7 @@
 package com.example.juan.calculadora.Domain;
 
+import android.util.Log;
+
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 import com.example.juan.calculadora.Domain.Operands.Component;
 import com.example.juan.calculadora.Domain.Operands.OpenParenthesis;
@@ -45,9 +47,10 @@ public class Calculator {
 
     public static void executeStacks(Stack<Double> numStack, Stack<Component> operandStack) {
         while (!operandStack.isEmpty()) {
-            double leftNumber = numStack.getPop();
             double rightNumber = numStack.getPop();
+            double leftNumber = numStack.getPop();
             Component currentOperand = operandStack.getPop();
+            Log.v("c", "" + currentOperand.getClass());
             double result = ((Operand)currentOperand).operate(leftNumber, rightNumber);
             numStack.push(result);
         }
@@ -55,11 +58,12 @@ public class Calculator {
 
     public static void executeStackUntilParenthesis(Stack<Double> numStack, Stack<Component> operandStack) {
         Component currentOperand = operandStack.getPop();
-        while (!(currentOperand instanceof OpenParenthesis)) {
-            double leftNumber = numStack.getPop();
+        while (currentOperand != null && !(currentOperand instanceof OpenParenthesis)) {
             double rightNumber = numStack.getPop();
+            double leftNumber = numStack.getPop();
             double result = ((Operand)currentOperand).operate(leftNumber, rightNumber);
             numStack.push(result);
+            Log.d("c", "current operand " + currentOperand.getClass());
             currentOperand = operandStack.getPop();
         }
     }
@@ -70,14 +74,30 @@ public class Calculator {
         FieldTextParser parser = new FieldTextParser(calculatorActivity.getTextField());
 
         Component lastComponent = parser.nextComponent();
+        if (lastComponent == null) {
+            calculatorActivity.onError();
+            return;
+        }
         lastComponent.execute(numStack, operandStack);
+        Log.v("Execution", "Executing component " + lastComponent.getClass());
         while (parser.haveComponentsLeft()) {
             Component component = parser.nextComponent();
+            if (component == null) {
+                calculatorActivity.onError();
+                return;
+            }
             if (lastComponent.isCompatibleWith(component)) {
+                Log.v("Execution", "Executing component " + component.getClass());
                 component.execute(numStack, operandStack);
             }
+            else {
+                calculatorActivity.onError();
+                return;
+            };
+            lastComponent = component;
         }
         executeStacks(numStack, operandStack);
+        calculatorActivity.setResult(Double.toString(numStack.getTop()));
     }
 
     public void comma() {
@@ -85,10 +105,10 @@ public class Calculator {
     }
 
     public void closePar() {
-        calculatorActivity.newSymbol("(");
+        calculatorActivity.newSymbol(")");
     }
 
     public void openPar() {
-        calculatorActivity.newSymbol(")");
+        calculatorActivity.newSymbol("(");
     }
 }

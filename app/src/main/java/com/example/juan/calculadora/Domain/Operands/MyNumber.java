@@ -1,5 +1,7 @@
 package com.example.juan.calculadora.Domain.Operands;
 
+import android.util.Log;
+
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 
 public class MyNumber extends Component {

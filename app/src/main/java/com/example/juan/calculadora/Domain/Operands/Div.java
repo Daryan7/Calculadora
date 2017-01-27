@@ -1,5 +1,7 @@
 package com.example.juan.calculadora.Domain.Operands;
 
+import android.util.Log;
+
 public class Div extends Operand {
 
     public Div() {
@@ -8,6 +10,7 @@ public class Div extends Operand {
 
     @Override
     public double operate(double left, double right) {
+        Log.d("div", "" + left + "/" + right);
         return left/right;
     }
 }
