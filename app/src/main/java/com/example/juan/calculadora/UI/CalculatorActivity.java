@@ -1,14 +1,13 @@
 package com.example.juan.calculadora.UI;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +16,27 @@ import android.widget.Toast;
 
 import com.example.juan.calculadora.Domain.Calculator;
 import com.example.juan.calculadora.R;
+import com.example.juan.calculadora.UI.Comunication.OnFragmentInteractionListener;
 import com.example.juan.calculadora.UI.Listeners.FuncButtonListener;
 import com.example.juan.calculadora.UI.Listeners.NumButtonListener;
 import com.example.juan.calculadora.UI.Listeners.OperandButtonListener;
 
 
-public class CalculatorActivity extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
+public class CalculatorActivity extends Fragment {
     private TextView inputField;
     private TextView outputField;
     private String actualString;
+    private OnFragmentInteractionListener mListener;
+    private boolean toast, state;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        SharedPreferences notificationSettings = getActivity().getSharedPreferences("notificationSettings", Context.MODE_PRIVATE);
+        toast = notificationSettings.getBoolean("toast", false);
+        state = notificationSettings.getBoolean("state", false);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,10 +76,40 @@ public class CalculatorActivity extends Fragment implements NavigationView.OnNav
         return rootView;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.activity_calculator, menu);
+        menu.findItem(R.id.toastNotification).setChecked(toast);
+        menu.findItem(R.id.stateNotification).setChecked(state);
+    }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        }
+        else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.toastNotification:
+                toast = !toast;
+                item.setChecked(toast);
+                return true;
+            case R.id.stateNotification:
+                state = !state;
+                item.setChecked(state);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void newSymbol(String symbol) {
@@ -114,5 +155,20 @@ public class CalculatorActivity extends Fragment implements NavigationView.OnNav
 
     public void setResult(String number) {
         outputField.setText(number);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.v("Calculator Activity", "onStop");
+
+        SharedPreferences notificationSettings = getActivity().getSharedPreferences("notificationSettings", 0);
+
+        SharedPreferences.Editor editor = notificationSettings.edit();
+
+        editor.putBoolean("toast", toast);
+        editor.putBoolean("state", state);
+
+        editor.apply();
     }
 }

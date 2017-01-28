@@ -26,4 +26,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="toast_notification">Toast Notification</string>
+    <string name="state_notification">State Notification</string>
+    <string name="call">Call</string>
+    <string name="logout">Log out</string>
 </resources>

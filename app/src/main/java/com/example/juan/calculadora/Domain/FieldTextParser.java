@@ -35,7 +35,7 @@ public class FieldTextParser {
 
     private MyNumber readNumber() {
         int initialIndex = currentIndex;
-        while (currentIndex < text.length() && isNumber(text.charAt(currentIndex))) {
+        while (currentIndex < text.length() && (isNumber(text.charAt(currentIndex)) || text.charAt(currentIndex) == '.')) {
             ++currentIndex;
         }
         return new MyNumber(text.substring(initialIndex, currentIndex));

@@ -1,6 +1,7 @@
 package com.example.juan.calculadora.UI;
 
 import android.os.Bundle;
+import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -9,11 +10,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.juan.calculadora.R;
+import com.example.juan.calculadora.UI.Comunication.OnFragmentInteractionListener;
 
-public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -33,7 +37,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         //Creamos el primer fragment, y no le pasamos argumentos!
-        setTitle("Fragment 1");
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
                 fragmentManager.beginTransaction();
@@ -41,6 +44,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         //El Frame Layout es el contenedor
         fragmentTransaction.replace(R.id.frame_layout_base, new CalculatorActivity());
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.first_menu, menu);
+        return true;
     }
 
     @Override
