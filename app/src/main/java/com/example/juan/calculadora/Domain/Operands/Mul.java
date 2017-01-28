@@ -1,5 +1,7 @@
 package com.example.juan.calculadora.Domain.Operands;
 
+import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
+
 public class Mul extends Operand {
 
     public Mul() {

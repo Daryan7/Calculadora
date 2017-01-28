@@ -84,11 +84,11 @@ public class Calculator {
             executeStacks(numStack, operandStack);
             lastResult = numStack.getPop();
             calculatorActivity.setResult(Double.toString(lastResult));
+            calculatorActivity.resetNextInput();
         }
         catch (WrongExpression exception) {
             calculatorActivity.onError();
         }
-        calculatorActivity.resetNextInput();
     }
 
     public static double getLastResult() {

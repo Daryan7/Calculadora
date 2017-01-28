@@ -8,11 +8,13 @@ import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 public class OpenParenthesis extends Token {
 
     static int quantity;
+    private Token auxToken;
 
     private boolean negative;
 
     public OpenParenthesis() {
         negative = false;
+        auxToken = null;
     }
 
     public void initialToken() throws WrongExpression {
@@ -31,7 +33,10 @@ public class OpenParenthesis extends Token {
     }
 
     @Override
-    public void execute(Stack<Double> numStack, Stack<Token> componentStack) {
+    public void execute(Stack<Double> numStack, Stack<Token> componentStack) throws WrongExpression {
+        if (auxToken != null) {
+            auxToken.execute(numStack, componentStack);
+        }
         componentStack.push(this);
         ++quantity;
     }
@@ -39,5 +44,11 @@ public class OpenParenthesis extends Token {
     @Override
     public void preExecute(Token leftToken) throws WrongExpression {
         if (leftToken instanceof Subs && ((Subs)leftToken).isAChangeSignOperator()) negative = true;
+        if (leftToken instanceof MyNumber || leftToken instanceof CloseParenthesis) {
+            auxToken = new Mul();
+            auxToken.preExecute(leftToken);
+            return;
+        }
+        if (!(leftToken instanceof Operand || leftToken instanceof OpenParenthesis)) throw new WrongExpression("");
     }
 }

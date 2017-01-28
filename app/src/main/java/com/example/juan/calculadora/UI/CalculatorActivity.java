@@ -153,6 +153,7 @@ public class CalculatorActivity extends Fragment {
             actualString = getResources().getString(R.string._0);
             inputField.setText(actualString);
         }
+        nextInputResets = false;
     }
 
     public String getTextField() {
@@ -169,6 +170,7 @@ public class CalculatorActivity extends Fragment {
         if (toast) {
             Toast.makeText(getContext(), getActivity().getResources().getString(R.string.toast_notification_text), Toast.LENGTH_SHORT).show();
         }
+        nextInputResets = false;
     }
 
     public void setResult(String number) {

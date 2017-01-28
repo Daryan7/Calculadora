@@ -26,7 +26,8 @@ public class Subs extends Operand {
 
     @Override
     public void preExecute(Token leftToken) throws WrongExpression {
-        if (leftToken instanceof MyNumber) _hasNumberAtLeftSide = true;
+        if (leftToken instanceof MyNumber || leftToken instanceof CloseParenthesis) _hasNumberAtLeftSide = true;
+        if (leftToken instanceof Mul || leftToken instanceof Div || leftToken instanceof OpenParenthesis) return;
         super.preExecute(leftToken);
     }
 
