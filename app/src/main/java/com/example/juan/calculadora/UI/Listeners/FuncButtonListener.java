@@ -14,8 +14,8 @@ public class FuncButtonListener extends CalculatorListeners {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id._CLR:
-                calculator.clear();
+            case R.id._ans:
+                calculator.ans();
                 break;
             case R.id._del:
                 calculator.del();

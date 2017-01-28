@@ -30,22 +30,27 @@ public class CalculatorActivity extends Fragment {
     private boolean toast, state;
 
     @Override
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         SharedPreferences notificationSettings = getActivity().getSharedPreferences("notificationSettings", Context.MODE_PRIVATE);
         toast = notificationSettings.getBoolean("toast", false);
         state = notificationSettings.getBoolean("state", false);
-        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.activity_test, container, false);
+        View rootView = inflater.inflate(R.layout.activity_calculator, container, false);
         actualString = "0";
         inputField = (TextView)rootView.findViewById(R.id.input);
         outputField = (TextView)rootView.findViewById(R.id.result);
-        Calculator calculator = new Calculator(this);
+        final Calculator calculator = new Calculator(this);
         NumButtonListener numListener = new NumButtonListener(calculator);
         OperandButtonListener operandListener = new OperandButtonListener(calculator);
         FuncButtonListener funcListener = new FuncButtonListener(calculator);
@@ -66,12 +71,19 @@ public class CalculatorActivity extends Fragment {
         rootView.findViewById(R.id._mul).setOnClickListener(operandListener);
         rootView.findViewById(R.id._div).setOnClickListener(operandListener);
 
-        rootView.findViewById(R.id._CLR).setOnClickListener(funcListener);
+        rootView.findViewById(R.id._ans).setOnClickListener(funcListener);
         rootView.findViewById(R.id._del).setOnClickListener(funcListener);
         rootView.findViewById(R.id._equal).setOnClickListener(funcListener);
         rootView.findViewById(R.id._openPar).setOnClickListener(funcListener);
         rootView.findViewById(R.id._closePar).setOnClickListener(funcListener);
         rootView.findViewById(R.id._comma).setOnClickListener(funcListener);
+        rootView.findViewById(R.id._del).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                calculator.clear();
+                return true;
+            }
+        });
 
         return rootView;
     }
@@ -125,12 +137,13 @@ public class CalculatorActivity extends Fragment {
             actualString = "";
         }
         actualString += getResources().getString(resId);
+        Log.d("Calculator activity", actualString);
         inputField.setText(actualString);
     }
 
-    public void removeSymbol() {
-        if (actualString.length() > 1) {
-            actualString = actualString.substring(0, actualString.length()-1);
+    public void removeSymbols(int numberOfSymbols) {
+        if (actualString.length() > numberOfSymbols) {
+            actualString = actualString.substring(0, actualString.length()-numberOfSymbols);
             inputField.setText(actualString);
         }
         else {
@@ -150,7 +163,9 @@ public class CalculatorActivity extends Fragment {
     }
 
     public void onError() {
-        Toast.makeText(getContext(), "Wrong expression", Toast.LENGTH_SHORT).show();
+        if (toast) {
+            Toast.makeText(getContext(), getActivity().getResources().getString(R.string.toast_notification_text), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setResult(String number) {
@@ -160,10 +175,8 @@ public class CalculatorActivity extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.v("Calculator Activity", "onStop");
 
         SharedPreferences notificationSettings = getActivity().getSharedPreferences("notificationSettings", 0);
-
         SharedPreferences.Editor editor = notificationSettings.edit();
 
         editor.putBoolean("toast", toast);

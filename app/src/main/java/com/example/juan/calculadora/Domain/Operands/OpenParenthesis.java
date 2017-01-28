@@ -1,7 +1,9 @@
 package com.example.juan.calculadora.Domain.Operands;
 
 
+import com.example.juan.calculadora.Domain.Calculator;
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
+import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 
 public class OpenParenthesis extends Token {
 
@@ -13,6 +15,9 @@ public class OpenParenthesis extends Token {
         negative = false;
     }
 
+    public void initialToken() throws WrongExpression {
+    }
+
     public static void resetCounter() {
         quantity = 0;
     }
@@ -21,11 +26,7 @@ public class OpenParenthesis extends Token {
         return quantity == 0;
     }
 
-    public void setNegativeResult() {
-        negative = true;
-    }
-
-    public boolean isResultNegative() {
+    boolean isResultNegative() {
         return negative;
     }
 
@@ -36,7 +37,8 @@ public class OpenParenthesis extends Token {
     }
 
     @Override
-    public boolean isCompatibleWith(Token rightToken) {
-        return (rightToken instanceof MyNumber) || (rightToken instanceof OpenParenthesis) || (rightToken instanceof Subs);
+    public void preExecute(Token leftToken) throws WrongExpression {
+        if (leftToken instanceof Subs && ((Subs)leftToken).isAChangeSignOperator()) negative = true;
+        //return (leftToken instanceof MyNumber) || (leftToken instanceof OpenParenthesis) || (leftToken instanceof Subs);
     }
 }

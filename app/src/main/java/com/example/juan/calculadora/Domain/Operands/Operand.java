@@ -1,9 +1,12 @@
 package com.example.juan.calculadora.Domain.Operands;
 
+import com.example.juan.calculadora.Domain.Calculator;
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
+import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 
 public abstract class Operand extends Token {
     int priority;
+
     public abstract double operate(double left, double right);
 
     @Override
@@ -29,7 +32,8 @@ public abstract class Operand extends Token {
     }
 
     @Override
-    public boolean isCompatibleWith(Token rightToken) {
-        return (rightToken instanceof MyNumber) || (rightToken instanceof OpenParenthesis);
+    public void preExecute(Token leftToken) throws WrongExpression {
+        if (!(leftToken instanceof MyNumber || leftToken instanceof OpenParenthesis)) throw new WrongExpression("");
+        //return (leftToken instanceof MyNumber) || (leftToken instanceof OpenParenthesis);
     }
 }

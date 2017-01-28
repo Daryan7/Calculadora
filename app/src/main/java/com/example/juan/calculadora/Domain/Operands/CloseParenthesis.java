@@ -26,9 +26,13 @@ public class CloseParenthesis extends Token {
         else throw new WrongExpression("Parenthesis are not well written");
     }
 
+    public void endToken() throws WrongExpression {
+    }
+
     @Override
-    public boolean isCompatibleWith(Token rightToken) {
-        if (rightToken instanceof Subs) ((Subs)rightToken).hasNumberAtLeftSide();
-        return (rightToken instanceof Operand) || (rightToken instanceof CloseParenthesis);
+    public void preExecute(Token leftToken) throws WrongExpression {
+        if (!(leftToken instanceof MyNumber || leftToken instanceof CloseParenthesis)) throw new WrongExpression("");
+        /*if (leftToken instanceof Subs) ((Subs) leftToken).hasNumberAtLeftSide();
+        return (leftToken instanceof Operand) || (leftToken instanceof CloseParenthesis);*/
     }
 }

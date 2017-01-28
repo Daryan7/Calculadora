@@ -19,8 +19,7 @@
     <string name="_equal">=</string>
     <string name="_openPar">(</string>
     <string name="_closePar">)</string>
-    <string name="_clear">CLR</string>
-    <string name="title_activity_remove">REMOVE</string>
+    <string name="_ans">ans</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -30,4 +29,6 @@
     <string name="state_notification">State Notification</string>
     <string name="call">Call</string>
     <string name="logout">Log out</string>
+    <string name="toast_notification_text">Wrong expression</string>
+    <string name="open_browser">Open browser</string>
 </resources>

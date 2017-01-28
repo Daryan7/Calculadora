@@ -4,21 +4,20 @@ import android.util.Log;
 
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
-import com.example.juan.calculadora.Domain.Operands.CloseParenthesis;
-import com.example.juan.calculadora.Domain.Operands.MyNumber;
 import com.example.juan.calculadora.Domain.Operands.Token;
 import com.example.juan.calculadora.Domain.Operands.OpenParenthesis;
 import com.example.juan.calculadora.Domain.Operands.Operand;
-import com.example.juan.calculadora.Domain.Operands.Subs;
 import com.example.juan.calculadora.R;
 import com.example.juan.calculadora.UI.CalculatorActivity;
 
 public class Calculator {
 
     private CalculatorActivity calculatorActivity;
+    private static double lastResult;
 
     public Calculator(CalculatorActivity calculatorActivity) {
         this.calculatorActivity = calculatorActivity;
+        lastResult = 0;
     }
 
     public void newDigit(int digit) {
@@ -42,7 +41,11 @@ public class Calculator {
     }
 
     public void del() {
-        calculatorActivity.removeSymbol();
+        String text = calculatorActivity.getTextField();
+        if (text.charAt(text.length()-1) == 's') {
+            calculatorActivity.removeSymbols(3);
+        }
+        else calculatorActivity.removeSymbols(1);
     }
 
     public void clear() {
@@ -66,31 +69,29 @@ public class Calculator {
         FieldTextParser parser = new FieldTextParser(calculatorActivity.getTextField());
         try {
             Token lastToken = parser.nextToken();
-            if ((lastToken instanceof Operand && !(lastToken instanceof Subs)) || lastToken instanceof CloseParenthesis) {
-                throw new WrongExpression("Syntax error at beginning of expression: found " + lastToken.getClass() + ", which is invalid");
-            }
+            lastToken.initialToken();
             lastToken.execute(numStack, operandStack);
-            Log.d("Execution", "Executing component " + lastToken.getClass());
             while (parser.haveTokensLeft()) {
                 Token token = parser.nextToken();
-                if (lastToken.isCompatibleWith(token)) {
-                    Log.d("Execution", "Executing token " + token.getClass());
-                    token.execute(numStack, operandStack);
-                }
-                else throw new WrongExpression("Syntax error while treating expression: found " + lastToken.getClass() + " with " + token.getClass() + ", which is invalid");
+                token.preExecute(lastToken);
+                token.execute(numStack, operandStack);
                 lastToken = token;
             }
-            if (!(lastToken instanceof MyNumber || lastToken instanceof CloseParenthesis)) {
-                throw new WrongExpression("Syntax error at ending of expression: found " + lastToken.getClass() + ", which is invalid");
-            }
-            if (!OpenParenthesis.goodParenthesis()) throw new WrongExpression("Parenthesis not well written");
+            lastToken.endToken();
+            if (!OpenParenthesis.goodParenthesis()) throw new WrongExpression("Parenthesis not well placed");
             executeStacks(numStack, operandStack);
-            calculatorActivity.setResult(Double.toString(numStack.getTop()));
+            lastResult = numStack.getPop();
+            Log.d("Calculator", "" + lastResult);
+            calculatorActivity.setResult(Double.toString(lastResult));
         }
         catch (WrongExpression exception) {
             Log.d("Exception", exception.getMessage());
             calculatorActivity.onError();
         }
+    }
+
+    public static double getLastResult() {
+        return lastResult;
     }
 
     public void comma() {
@@ -103,5 +104,9 @@ public class Calculator {
 
     public void openPar() {
         calculatorActivity.newSymbol("(");
+    }
+
+    public void ans() {
+        calculatorActivity.newSymbol(R.string._ans);
     }
 }

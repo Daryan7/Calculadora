@@ -1,6 +1,8 @@
 package com.example.juan.calculadora.Domain.Operands;
 
+import com.example.juan.calculadora.Domain.Calculator;
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
+import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 
 public class Subs extends Operand {
 
@@ -11,24 +13,29 @@ public class Subs extends Operand {
         _hasNumberAtLeftSide = false;
     }
 
+    public void initialToken() throws WrongExpression {
+    }
+
     public void hasNumberAtLeftSide() {
         _hasNumberAtLeftSide = true;
     }
 
-    public boolean getHasNumberAtLeftSide() {
-        return _hasNumberAtLeftSide;
+    public boolean isAChangeSignOperator() {
+        return !_hasNumberAtLeftSide;
     }
 
     @Override
-    public boolean isCompatibleWith(Token rightToken) {
-        if (!_hasNumberAtLeftSide) {
-            if (rightToken instanceof OpenParenthesis) {
-                ((OpenParenthesis) rightToken).setNegativeResult();
-            } else if (rightToken instanceof MyNumber) {
-                ((MyNumber) rightToken).setNegative();
+    public void preExecute(Token leftToken) throws WrongExpression {
+        if (leftToken instanceof MyNumber) _hasNumberAtLeftSide = true;
+        super.preExecute(leftToken);
+        /*if (!_hasNumberAtLeftSide) {
+            if (leftToken instanceof OpenParenthesis) {
+                ((OpenParenthesis) leftToken).setNegativeResult();
+            } else if (leftToken instanceof MyNumber) {
+                ((MyNumber) leftToken).setNegative();
             }
         }
-        return super.isCompatibleWith(rightToken);
+        return super.preExecute(leftToken, lastResult);*/
     }
 
     @Override
