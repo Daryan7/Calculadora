@@ -43,12 +43,13 @@ public class OpenParenthesis extends Token {
 
     @Override
     public void preExecute(Token leftToken) throws WrongExpression {
-        if (leftToken instanceof Subs && ((Subs)leftToken).isAChangeSignOperator()) negative = true;
-        if (leftToken instanceof MyNumber || leftToken instanceof CloseParenthesis) {
+        if (leftToken instanceof Subs) {
+            if (((Subs)leftToken).isAChangeSignOperator()) negative = true;
+        }
+        else if (leftToken instanceof MyNumber || leftToken instanceof CloseParenthesis) {
             auxToken = new Mul();
             auxToken.preExecute(leftToken);
-            return;
         }
-        if (!(leftToken instanceof Operand || leftToken instanceof OpenParenthesis)) throw new WrongExpression("");
+        else if (!(leftToken instanceof Operand || leftToken instanceof OpenParenthesis)) throw new WrongExpression("");
     }
 }
