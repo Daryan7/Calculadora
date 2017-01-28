@@ -20,4 +20,10 @@
     <string name="_openPar">(</string>
     <string name="_closePar">)</string>
     <string name="_clear">CLR</string>
+    <string name="title_activity_remove">REMOVE</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

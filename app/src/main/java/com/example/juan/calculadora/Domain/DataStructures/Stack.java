@@ -9,11 +9,9 @@ public class Stack<E> {
     }
 
     private Node top;
-    private int numElements;
 
     public Stack() {
         top = null;
-        numElements = 0;
     }
 
     public E getTop() {
@@ -25,28 +23,19 @@ public class Stack<E> {
         node.element = element;
         node.next = top;
         top = node;
-        ++numElements;
     }
 
     public void pop() {
-        if (top != null) {
-            top = top.next;
-            --numElements;
-        }
+        top = top.next;
     }
 
     public E getPop() {
-        E element = null;
-        if (top != null) {
-            element = top.element;
-            top = top.next;
-            --numElements;
-        }
+        E element = top.element;
+        top = top.next;
         return element;
     }
 
-
     public boolean isEmpty() {
-        return numElements == 0;
+        return top == null;
     }
 }

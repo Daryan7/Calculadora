@@ -49,28 +49,13 @@ public class Calculator {
         calculatorActivity.clearField();
     }
 
-    public static void executeStacks(Stack<Double> numStack, Stack<Token> operandStack) {
+    private static void executeStacks(Stack<Double> numStack, Stack<Token> operandStack) {
         while (!operandStack.isEmpty()) {
             double rightNumber = numStack.getPop();
             double leftNumber = numStack.getPop();
             Token currentOperand = operandStack.getPop();
             double result = ((Operand)currentOperand).operate(leftNumber, rightNumber);
             numStack.push(result);
-        }
-    }
-
-    public static void executeStackUntilParenthesis(Stack<Double> numStack, Stack<Token> operandStack) {
-        Token currentOperand = operandStack.getPop();
-        while (currentOperand != null && !(currentOperand instanceof OpenParenthesis)) {
-            double rightNumber = numStack.getPop();
-            double leftNumber = numStack.getPop();
-            double result = ((Operand)currentOperand).operate(leftNumber, rightNumber);
-            numStack.push(result);
-            currentOperand = operandStack.getPop();
-        }
-        if (((OpenParenthesis)currentOperand).isResultNegative()) {
-            double top = numStack.getPop();
-            numStack.push(top*-1);
         }
     }
 
