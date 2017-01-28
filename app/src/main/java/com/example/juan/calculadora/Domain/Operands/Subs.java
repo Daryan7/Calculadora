@@ -28,14 +28,6 @@ public class Subs extends Operand {
     public void preExecute(Token leftToken) throws WrongExpression {
         if (leftToken instanceof MyNumber) _hasNumberAtLeftSide = true;
         super.preExecute(leftToken);
-        /*if (!_hasNumberAtLeftSide) {
-            if (leftToken instanceof OpenParenthesis) {
-                ((OpenParenthesis) leftToken).setNegativeResult();
-            } else if (leftToken instanceof MyNumber) {
-                ((MyNumber) leftToken).setNegative();
-            }
-        }
-        return super.preExecute(leftToken, lastResult);*/
     }
 
     @Override

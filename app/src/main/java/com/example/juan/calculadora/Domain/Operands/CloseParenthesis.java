@@ -32,7 +32,5 @@ public class CloseParenthesis extends Token {
     @Override
     public void preExecute(Token leftToken) throws WrongExpression {
         if (!(leftToken instanceof MyNumber || leftToken instanceof CloseParenthesis)) throw new WrongExpression("");
-        /*if (leftToken instanceof Subs) ((Subs) leftToken).hasNumberAtLeftSide();
-        return (leftToken instanceof Operand) || (leftToken instanceof CloseParenthesis);*/
     }
 }

@@ -1,7 +1,5 @@
 package com.example.juan.calculadora.Domain;
 
-import android.util.Log;
-
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 import com.example.juan.calculadora.Domain.Operands.Token;
@@ -25,18 +23,22 @@ public class Calculator {
     }
 
     public void sum() {
+        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(R.string._ans);
         calculatorActivity.newSymbol(R.string._sum);
     }
 
     public void subs() {
+        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(R.string._ans);
         calculatorActivity.newSymbol(R.string._subs);
     }
 
     public void div() {
+        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(R.string._ans);
         calculatorActivity.newSymbol(R.string._div);
     }
 
     public void mul() {
+        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(R.string._ans);
         calculatorActivity.newSymbol(R.string._mul);
     }
 
@@ -81,13 +83,12 @@ public class Calculator {
             if (!OpenParenthesis.goodParenthesis()) throw new WrongExpression("Parenthesis not well placed");
             executeStacks(numStack, operandStack);
             lastResult = numStack.getPop();
-            Log.d("Calculator", "" + lastResult);
             calculatorActivity.setResult(Double.toString(lastResult));
         }
         catch (WrongExpression exception) {
-            Log.d("Exception", exception.getMessage());
             calculatorActivity.onError();
         }
+        calculatorActivity.resetNextInput();
     }
 
     public static double getLastResult() {

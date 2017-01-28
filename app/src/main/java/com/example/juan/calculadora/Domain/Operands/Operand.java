@@ -34,6 +34,5 @@ public abstract class Operand extends Token {
     @Override
     public void preExecute(Token leftToken) throws WrongExpression {
         if (!(leftToken instanceof MyNumber || leftToken instanceof OpenParenthesis)) throw new WrongExpression("");
-        //return (leftToken instanceof MyNumber) || (leftToken instanceof OpenParenthesis);
     }
 }

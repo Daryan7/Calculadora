@@ -57,13 +57,10 @@ public class FieldTextParser {
     public Token nextToken() throws WrongExpression {
         if (currentIndex >= text.length()) throw new WrongExpression("Tried to parse after end of expression, index found " + currentIndex + " but text has length " + text.length());
         char currentSymbol = text.charAt(currentIndex);
-        Log.d("Parser", "Parsing " + currentSymbol + " at index " + currentIndex);
         if (isNumber(currentSymbol)) {
-            Log.d("Parser", currentSymbol + " is number");
             return readNumber();
         }
         if (isLetter(currentSymbol)) {
-            Log.d("Parser", currentSymbol + " is letter");
             return readAnsWord();
         }
         Token token;

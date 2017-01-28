@@ -39,6 +39,5 @@ public class OpenParenthesis extends Token {
     @Override
     public void preExecute(Token leftToken) throws WrongExpression {
         if (leftToken instanceof Subs && ((Subs)leftToken).isAChangeSignOperator()) negative = true;
-        //return (leftToken instanceof MyNumber) || (leftToken instanceof OpenParenthesis) || (leftToken instanceof Subs);
     }
 }

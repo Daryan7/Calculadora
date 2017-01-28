@@ -1,6 +1,7 @@
 package com.example.juan.calculadora.Domain.Operands;
 
-import com.example.juan.calculadora.Domain.Calculator;
+import android.util.Log;
+
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 
@@ -11,16 +12,13 @@ public class MyNumber extends Token {
         num = Double.parseDouble(number);
     }
 
-    public MyNumber() {
+    MyNumber() {
     }
 
     public void initialToken() throws WrongExpression {
     }
     public void endToken() throws WrongExpression {
     }
-    /*public void setNegative() {
-        num = num * -1;
-    }*/
 
     @Override
     public void execute(Stack<Double> numStack, Stack<Token> componentStack) {
@@ -33,9 +31,5 @@ public class MyNumber extends Token {
             num *= -1;
         }
         if (!(leftToken instanceof Operand || leftToken instanceof OpenParenthesis)) throw new WrongExpression("");
-        /*if (leftToken instanceof Subs) {
-            ((Subs) leftToken).hasNumberAtLeftSide();
-        }
-        return (leftToken instanceof MyNumber) || (leftToken instanceof Operand) || (leftToken instanceof CloseParenthesis);*/
     }
 }

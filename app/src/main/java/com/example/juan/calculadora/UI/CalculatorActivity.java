@@ -28,11 +28,13 @@ public class CalculatorActivity extends Fragment {
     private String actualString;
     private OnFragmentInteractionListener mListener;
     private boolean toast, state;
+    private boolean nextInputResets;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setHasOptionsMenu(true);
+        nextInputResets = false;
     }
 
     @Override
@@ -125,19 +127,20 @@ public class CalculatorActivity extends Fragment {
     }
 
     public void newSymbol(String symbol) {
-        if (actualString.equals("0")) {
+        if (actualString.equals("0") || nextInputResets) {
             actualString = "";
+            nextInputResets = false;
         }
         actualString += symbol;
         inputField.setText(actualString);
     }
 
     public void newSymbol(int resId) {
-        if (actualString.equals("0")) {
+        if (actualString.equals("0") || nextInputResets) {
             actualString = "";
+            nextInputResets = false;
         }
         actualString += getResources().getString(resId);
-        Log.d("Calculator activity", actualString);
         inputField.setText(actualString);
     }
 
@@ -183,5 +186,13 @@ public class CalculatorActivity extends Fragment {
         editor.putBoolean("state", state);
 
         editor.apply();
+    }
+
+    public void resetNextInput() {
+        nextInputResets = true;
+    }
+
+    public boolean doesNextInputResets() {
+        return nextInputResets;
     }
 }
