@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.juan.calculadora.Domain.Calculator;
+import com.example.juan.calculadora.Domain.FieldTextParser;
 import com.example.juan.calculadora.R;
 import com.example.juan.calculadora.UI.Comunication.OnFragmentInteractionListener;
 import com.example.juan.calculadora.UI.Listeners.FuncButtonListener;
@@ -49,7 +50,7 @@ public class CalculatorActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_calculator, container, false);
-        actualString = "0";
+        actualString = "";
         inputField = (TextView)rootView.findViewById(R.id.input);
         outputField = (TextView)rootView.findViewById(R.id.result);
         final Calculator calculator = new Calculator(this);
@@ -127,20 +128,11 @@ public class CalculatorActivity extends Fragment {
     }
 
     public void newSymbol(String symbol) {
-        if (actualString.equals("0") || nextInputResets) {
+        if (nextInputResets) {
             actualString = "";
             nextInputResets = false;
         }
         actualString += symbol;
-        inputField.setText(actualString);
-    }
-
-    public void newSymbol(int resId) {
-        if (actualString.equals("0") || nextInputResets) {
-            actualString = "";
-            nextInputResets = false;
-        }
-        actualString += getResources().getString(resId);
         inputField.setText(actualString);
     }
 
@@ -150,8 +142,8 @@ public class CalculatorActivity extends Fragment {
             inputField.setText(actualString);
         }
         else {
-            actualString = getResources().getString(R.string._0);
-            inputField.setText(actualString);
+            actualString = "";
+            inputField.setText("");
         }
         nextInputResets = false;
     }
@@ -161,8 +153,8 @@ public class CalculatorActivity extends Fragment {
     }
 
     public void clearField() {
-        actualString = "0";
-        inputField.setText(getResources().getString(R.string._0));
+        actualString = "";
+        inputField.setText("");
         outputField.setText("");
     }
 
@@ -196,5 +188,9 @@ public class CalculatorActivity extends Fragment {
 
     public boolean doesNextInputResets() {
         return nextInputResets;
+    }
+
+    public char lastSymbol() {
+        return actualString.charAt(actualString.length()-1);
     }
 }

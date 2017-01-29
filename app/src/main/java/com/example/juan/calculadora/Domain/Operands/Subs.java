@@ -16,17 +16,16 @@ public class Subs extends Operand {
     public void initialToken() throws WrongExpression {
     }
 
-    public void hasNumberAtLeftSide() {
-        _hasNumberAtLeftSide = true;
-    }
-
     public boolean isAChangeSignOperator() {
         return !_hasNumberAtLeftSide;
     }
 
     @Override
     public void preExecute(Token leftToken) throws WrongExpression {
-        if (leftToken instanceof MyNumber || leftToken instanceof CloseParenthesis) _hasNumberAtLeftSide = true;
+        if (leftToken instanceof MyNumber || leftToken instanceof CloseParenthesis) {
+            _hasNumberAtLeftSide = true;
+            return;
+        }
         if (leftToken instanceof Mul || leftToken instanceof Div || leftToken instanceof OpenParenthesis) return;
         super.preExecute(leftToken);
     }

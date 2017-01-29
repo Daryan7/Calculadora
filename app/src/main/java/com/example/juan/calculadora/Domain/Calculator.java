@@ -8,6 +8,8 @@ import com.example.juan.calculadora.Domain.Operands.Operand;
 import com.example.juan.calculadora.R;
 import com.example.juan.calculadora.UI.CalculatorActivity;
 
+import java.lang.reflect.Field;
+
 public class Calculator {
 
     private CalculatorActivity calculatorActivity;
@@ -23,29 +25,28 @@ public class Calculator {
     }
 
     public void sum() {
-        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(R.string._ans);
-        calculatorActivity.newSymbol(R.string._sum);
+        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(FieldTextParser.ans);
+        calculatorActivity.newSymbol(FieldTextParser.sum);
     }
 
     public void subs() {
-        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(R.string._ans);
-        calculatorActivity.newSymbol(R.string._subs);
+        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(FieldTextParser.ans);
+        calculatorActivity.newSymbol(FieldTextParser.subs);
     }
 
     public void div() {
-        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(R.string._ans);
-        calculatorActivity.newSymbol(R.string._div);
+        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(FieldTextParser.ans);
+        calculatorActivity.newSymbol(FieldTextParser.div);
     }
 
     public void mul() {
-        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(R.string._ans);
-        calculatorActivity.newSymbol(R.string._mul);
+        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(FieldTextParser.ans);
+        calculatorActivity.newSymbol(FieldTextParser.mul);
     }
 
     public void del() {
-        String text = calculatorActivity.getTextField();
-        if (text.charAt(text.length()-1) == 's') {
-            calculatorActivity.removeSymbols(3);
+        if (calculatorActivity.lastSymbol() == FieldTextParser.ans.charAt(FieldTextParser.ans.length()-1)) {
+            calculatorActivity.removeSymbols(FieldTextParser.ans.length());
         }
         else calculatorActivity.removeSymbols(1);
     }
@@ -96,18 +97,18 @@ public class Calculator {
     }
 
     public void comma() {
-        calculatorActivity.newSymbol(R.string._comma);
+        calculatorActivity.newSymbol(FieldTextParser.commma);
     }
 
     public void closePar() {
-        calculatorActivity.newSymbol(")");
+        calculatorActivity.newSymbol(FieldTextParser.closePar);
     }
 
     public void openPar() {
-        calculatorActivity.newSymbol("(");
+        calculatorActivity.newSymbol(FieldTextParser.openPar);
     }
 
     public void ans() {
-        calculatorActivity.newSymbol(R.string._ans);
+        calculatorActivity.newSymbol(FieldTextParser.ans);
     }
 }

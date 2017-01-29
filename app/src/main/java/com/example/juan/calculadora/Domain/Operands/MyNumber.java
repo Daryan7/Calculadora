@@ -15,9 +15,9 @@ public class MyNumber extends Token {
     MyNumber() {
     }
 
-    public void initialToken() throws WrongExpression {
+    public void initialToken() {
     }
-    public void endToken() throws WrongExpression {
+    public void endToken() {
     }
 
     @Override
@@ -29,6 +29,7 @@ public class MyNumber extends Token {
     public void preExecute(Token leftToken) throws WrongExpression {
         if (leftToken instanceof Subs && ((Subs)leftToken).isAChangeSignOperator()) {
             num *= -1;
+            return;
         }
         if (!(leftToken instanceof Operand || leftToken instanceof OpenParenthesis)) throw new WrongExpression("");
     }
