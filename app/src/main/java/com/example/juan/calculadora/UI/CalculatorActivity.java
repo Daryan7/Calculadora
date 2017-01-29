@@ -1,10 +1,11 @@
 package com.example.juan.calculadora.UI;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.juan.calculadora.Domain.Calculator;
-import com.example.juan.calculadora.Domain.FieldTextParser;
 import com.example.juan.calculadora.R;
 import com.example.juan.calculadora.UI.Comunication.OnFragmentInteractionListener;
 import com.example.juan.calculadora.UI.Listeners.FuncButtonListener;
@@ -162,6 +162,18 @@ public class CalculatorActivity extends Fragment {
         if (toast) {
             Toast.makeText(getContext(), getActivity().getResources().getString(R.string.toast_notification_text), Toast.LENGTH_SHORT).show();
         }
+        if (state) {
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(getContext())
+                            .setSmallIcon(R.drawable.ic_error)
+                            .setContentTitle("Wrong Expression")
+                            .setContentText("Texto de contenido");
+
+            mNotificationManager.notify(0, mBuilder.build());
+        }
         nextInputResets = false;
     }
 
@@ -192,5 +204,9 @@ public class CalculatorActivity extends Fragment {
 
     public char lastSymbol() {
         return actualString.charAt(actualString.length()-1);
+    }
+
+    public int fieldLenght() {
+        return actualString.length();
     }
 }

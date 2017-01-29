@@ -45,7 +45,7 @@ public class Calculator {
     }
 
     public void del() {
-        if (calculatorActivity.lastSymbol() == FieldTextParser.ans.charAt(FieldTextParser.ans.length()-1)) {
+        if (calculatorActivity.fieldLenght() >= 3 && calculatorActivity.lastSymbol() == 's') {
             calculatorActivity.removeSymbols(FieldTextParser.ans.length());
         }
         else calculatorActivity.removeSymbols(1);
@@ -55,12 +55,12 @@ public class Calculator {
         calculatorActivity.clearField();
     }
 
-    private static void executeStacks(Stack<Double> numStack, Stack<Token> operandStack) {
+    private void executeStacks(Stack<Double> numStack, Stack<Token> operandStack) {
         while (!operandStack.isEmpty()) {
             double rightNumber = numStack.getPop();
             double leftNumber = numStack.getPop();
-            Token currentOperand = operandStack.getPop();
-            double result = ((Operand)currentOperand).operate(leftNumber, rightNumber);
+            Operand currentOperand = (Operand)operandStack.getPop();
+            double result = currentOperand.operate(leftNumber, rightNumber);
             numStack.push(result);
         }
     }
