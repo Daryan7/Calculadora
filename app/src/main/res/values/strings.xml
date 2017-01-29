@@ -31,4 +31,7 @@
     <string name="logout">Log out</string>
     <string name="toast_notification_text">Wrong expression</string>
     <string name="open_browser">Open browser</string>
+
+    <string name="ranking">Ranking</string>
+    <string name="calculator">Calculator</string>
 </resources>

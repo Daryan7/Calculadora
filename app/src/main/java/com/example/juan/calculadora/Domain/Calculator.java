@@ -9,15 +9,18 @@ import com.example.juan.calculadora.R;
 import com.example.juan.calculadora.UI.CalculatorActivity;
 
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class Calculator {
 
     private CalculatorActivity calculatorActivity;
+    private DecimalFormat decimalFormat;
     private static double lastResult;
 
     public Calculator(CalculatorActivity calculatorActivity) {
         this.calculatorActivity = calculatorActivity;
-        lastResult = 0;
+        decimalFormat = new DecimalFormat("#.######");
     }
 
     public void newDigit(int digit) {
@@ -45,7 +48,7 @@ public class Calculator {
     }
 
     public void del() {
-        if (calculatorActivity.fieldLenght() >= 3 && calculatorActivity.lastSymbol() == 's') {
+        if (calculatorActivity.fieldLenght() > 0 && calculatorActivity.lastSymbol() == 's') {
             calculatorActivity.removeSymbols(FieldTextParser.ans.length());
         }
         else calculatorActivity.removeSymbols(1);
@@ -84,7 +87,7 @@ public class Calculator {
             if (!OpenParenthesis.goodParenthesis()) throw new WrongExpression("Parenthesis not well placed");
             executeStacks(numStack, operandStack);
             lastResult = numStack.getPop();
-            calculatorActivity.setResult(Double.toString(lastResult));
+            calculatorActivity.setResult(decimalFormat.format(lastResult));
             calculatorActivity.resetNextInput();
         }
         catch (WrongExpression exception) {

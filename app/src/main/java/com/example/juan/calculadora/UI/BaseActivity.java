@@ -18,6 +18,7 @@ import com.example.juan.calculadora.UI.Comunication.OnFragmentInteractionListene
 
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
     private Fragment actualFragment;
+    private DrawerLayout navDrawer;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -27,13 +28,14 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, navDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        navDrawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getMenu().findItem(R.id.calculator).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -43,7 +45,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         if (savedInstaceState != null) {
             actualFragment = fragmentManager.getFragment(savedInstaceState, "actualFragment");
         }
-        else actualFragment = new CalculatorActivity();
+        else if (actualFragment == null) actualFragment = new CalculatorActivity();
 
         fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
         fragmentTransaction.commit();
@@ -64,6 +66,36 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.calculator: {
+                item.setChecked(true);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction =
+                        fragmentManager.beginTransaction();
+                actualFragment = fragmentManager.findFragmentByTag("c");
+                if (actualFragment == null) {
+                   actualFragment = new CalculatorActivity();
+                }
+                fragmentTransaction.replace(R.id.frame_layout_base, actualFragment, "c");
+                fragmentTransaction.commit();
+                navDrawer.closeDrawers();
+                return true;
+            }
+            case R.id.ranking: {
+                item.setChecked(true);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction =
+                        fragmentManager.beginTransaction();
+                actualFragment = fragmentManager.findFragmentByTag("r");
+                if (actualFragment == null) {
+                    actualFragment = new RankingActivity();
+                }
+                fragmentTransaction.replace(R.id.frame_layout_base, actualFragment, "r");
+                fragmentTransaction.commit();
+                navDrawer.closeDrawers();
+                return true;
+            }
+        }
         return false;
     }
 }
