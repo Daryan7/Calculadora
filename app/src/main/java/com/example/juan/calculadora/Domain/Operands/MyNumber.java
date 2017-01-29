@@ -1,7 +1,5 @@
 package com.example.juan.calculadora.Domain.Operands;
 
-import android.util.Log;
-
 import com.example.juan.calculadora.Domain.DataStructures.Stack;
 import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 

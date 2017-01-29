@@ -2,10 +2,13 @@ package com.example.juan.calculadora.UI;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +30,7 @@ public class CalculatorActivity extends Fragment {
     private TextView inputField;
     private TextView outputField;
     private String actualString;
+    private Calculator calculator;
     private OnFragmentInteractionListener mListener;
     private boolean toast, state;
     private boolean nextInputResets;
@@ -36,13 +40,14 @@ public class CalculatorActivity extends Fragment {
         super.onCreate(bundle);
         setHasOptionsMenu(true);
         nextInputResets = false;
+        calculator = new Calculator(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         SharedPreferences notificationSettings = getActivity().getSharedPreferences("notificationSettings", Context.MODE_PRIVATE);
-        toast = notificationSettings.getBoolean("toast", false);
+        toast = notificationSettings.getBoolean("toast", true);
         state = notificationSettings.getBoolean("state", false);
     }
 
@@ -50,10 +55,15 @@ public class CalculatorActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_calculator, container, false);
-        actualString = "";
         inputField = (TextView)rootView.findViewById(R.id.input);
         outputField = (TextView)rootView.findViewById(R.id.result);
-        final Calculator calculator = new Calculator(this);
+        if (savedInstanceState != null) {
+            actualString = savedInstanceState.getString("inputField");
+            inputField.setText(actualString);
+            outputField.setText(savedInstanceState.getString("outputField"));
+        }
+        else actualString = "";
+
         NumButtonListener numListener = new NumButtonListener(calculator);
         OperandButtonListener operandListener = new OperandButtonListener(calculator);
         FuncButtonListener funcListener = new FuncButtonListener(calculator);
@@ -92,6 +102,13 @@ public class CalculatorActivity extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putString("inputField", actualString);
+        bundle.putString("outputField", outputField.getText().toString());
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.activity_calculator, menu);
@@ -122,6 +139,16 @@ public class CalculatorActivity extends Fragment {
                 state = !state;
                 item.setChecked(state);
                 return true;
+            case R.id.call: {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + actualString));
+                startActivity(intent);
+                return true;
+            }
+            case R.id.openBrowser: {
+                Intent intent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_BROWSER);
+                startActivity(intent);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -139,12 +166,11 @@ public class CalculatorActivity extends Fragment {
     public void removeSymbols(int numberOfSymbols) {
         if (actualString.length() > numberOfSymbols) {
             actualString = actualString.substring(0, actualString.length()-numberOfSymbols);
-            inputField.setText(actualString);
         }
         else {
             actualString = "";
-            inputField.setText("");
         }
+        inputField.setText(actualString);
         nextInputResets = false;
     }
 
