@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,6 +20,7 @@ import com.example.juan.calculadora.UI.Comunication.OnFragmentInteractionListene
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
     private Fragment actualFragment;
     private DrawerLayout navDrawer;
+    private MenuItem menuItem;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -35,7 +37,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.getMenu().findItem(R.id.calculator).setChecked(true);
+        menuItem = navigationView.getMenu().findItem(R.id.calculator);
+        menuItem.setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -68,6 +71,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.calculator: {
+                navDrawer.closeDrawers();
+                if (actualFragment instanceof CalculatorActivity) return false;
                 item.setChecked(true);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction =
@@ -78,10 +83,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 }
                 fragmentTransaction.replace(R.id.frame_layout_base, actualFragment, "c");
                 fragmentTransaction.commit();
-                navDrawer.closeDrawers();
                 return true;
             }
             case R.id.ranking: {
+                navDrawer.closeDrawers();
+                if (actualFragment instanceof RankingActivity) return false;
                 item.setChecked(true);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction =
@@ -92,10 +98,26 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 }
                 fragmentTransaction.replace(R.id.frame_layout_base, actualFragment, "r");
                 fragmentTransaction.commit();
-                navDrawer.closeDrawers();
                 return true;
             }
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!(actualFragment instanceof CalculatorActivity)) {
+            menuItem.setChecked(true);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction =
+                    fragmentManager.beginTransaction();
+            actualFragment = fragmentManager.findFragmentByTag("c");
+            if (actualFragment == null) {
+                actualFragment = new CalculatorActivity();
+            }
+            fragmentTransaction.replace(R.id.frame_layout_base, actualFragment, "c");
+            fragmentTransaction.commit();
+        }
+        else super.onBackPressed();
     }
 }
