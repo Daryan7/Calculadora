@@ -4,14 +4,45 @@
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     card_view:cardCornerRadius="0dp"
-    android:layout_height="50dp"
+    android:layout_height="60dp"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
     android:layout_marginBottom="8dp"
     android:layout_marginTop="8dp">
 
-    <TextView
-        android:id="@+id/infoText"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/position"
+            android:text="1"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingStart="30dp"
+            android:paddingLeft="30dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="25sp"/>
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/nickName"
+            android:text="Daryan"
+            android:gravity="center"
+            android:paddingRight="30dp"
+            android:paddingEnd="30dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="20sp"/>
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/points"
+            android:text="99"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="30sp"
+            />
+    </LinearLayout>
+
 </android.support.v7.widget.CardView>

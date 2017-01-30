@@ -21,7 +21,9 @@ public class AppDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE "+ TABLE_NAME +" ("+Column.ID+" INTEGER PRIMARY KEY,"+Column.NICK+" TEXT UNIQUE,"+Column.POINTS+" INTEGER)");
-        sqLiteDatabase.execSQL("INSERT INTO "+ TABLE_NAME +" ("+Column.NICK+", "+Column.POINTS+") VALUES('jugador1','15'), ('jugador2', '30'), ('jugador3','8')");
+        sqLiteDatabase.execSQL("INSERT INTO "+ TABLE_NAME +" ("+Column.NICK+", "+Column.POINTS+") " +
+                "VALUES('jugador1','15'), ('jugador2', '30'), ('jugador3','8'), ('jugador4','1'), ('jugador5','10')," +
+                "('jugador6','11'), ('jugador7','6'), ('jugador8','5')");
     }
 
     @Override

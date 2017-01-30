@@ -29,6 +29,7 @@ public class RankingActivity extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_ranking, container, false);
 
         RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        listView.setHasFixedSize(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext());
         listView.setLayoutManager(linearLayoutManager);

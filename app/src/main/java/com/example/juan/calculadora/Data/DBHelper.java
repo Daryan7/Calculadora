@@ -28,7 +28,7 @@ public class DBHelper {
     }
 
     public List<User> getAllUsers() {
-        Cursor cursor = database.query(AppDB.TABLE_NAME, null, null, null, null, null, null);
+        Cursor cursor = database.query(AppDB.TABLE_NAME, null, null, null, null, null, AppDB.Column.POINTS);
 
         ArrayList<User> list = new ArrayList<>(cursor.getCount());
 

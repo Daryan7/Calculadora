@@ -1,7 +1,6 @@
 package com.example.juan.calculadora.UI.Adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,8 @@ import android.widget.TextView;
 import com.example.juan.calculadora.Data.User;
 import com.example.juan.calculadora.R;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHolder> {
     private List<User> userList;
@@ -30,7 +29,9 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.textView.setText(userList.get(position).getNickName());
+        holder.nickView.setText(userList.get(position).getNickName());
+        holder.pointsView.setText(Integer.toString(userList.get(position).getPoints()));
+        holder.positionView.setText(Integer.toString(position+1));
     }
 
     @Override
@@ -40,11 +41,15 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView textView;
+        public TextView nickView;
+        public TextView pointsView;
+        public TextView positionView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.textView = (TextView)itemView.findViewById(R.id.infoText);
+            nickView = (TextView)itemView.findViewById(R.id.nickName);
+            pointsView = (TextView) itemView.findViewById(R.id.points);
+            positionView = (TextView)itemView.findViewById(R.id.position);
         }
     }
 }
