@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.example.juan.calculadora.Data.DBHelper;
 import com.example.juan.calculadora.Data.User;
+import com.example.juan.calculadora.Domain.Calculator;
 import com.example.juan.calculadora.R;
 import com.example.juan.calculadora.UI.Adapters.RankingAdapter;
 import com.squareup.picasso.Picasso;
@@ -38,6 +39,7 @@ public class RankingActivity extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 0) {
                 Uri selectedImageUri = data.getData();
+                Picasso.with(getContext()).load(selectedImageUri).resize(600, 500).centerCrop().into(imageView);
             }
         }
     }*/

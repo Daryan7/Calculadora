@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -47,10 +48,13 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         if (savedInstaceState != null) {
             actualFragment = fragmentManager.getFragment(savedInstaceState, "actualFragment");
         }
-        else if (actualFragment == null) actualFragment = new CalculatorActivity();
+        else if (actualFragment == null) {
+            actualFragment = new CalculatorActivity();
+        }
 
         fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
         fragmentTransaction.commit();
+        fragmentManager.executePendingTransactions();
     }
 
     @Override
@@ -76,11 +80,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
-                actualFragment = fragmentManager.findFragmentByTag("c");
-                if (actualFragment == null) {
-                   actualFragment = new CalculatorActivity();
-                }
-                fragmentTransaction.replace(R.id.frame_layout_base, actualFragment, "c");
+                actualFragment = new CalculatorActivity();
+                fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
                 fragmentTransaction.commit();
                 return true;
             }
@@ -91,11 +92,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
-                actualFragment = fragmentManager.findFragmentByTag("r");
-                if (actualFragment == null) {
-                    actualFragment = new RankingActivity();
-                }
-                fragmentTransaction.replace(R.id.frame_layout_base, actualFragment, "r");
+                actualFragment = new RankingActivity();
+                fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
                 fragmentTransaction.commit();
                 return true;
             }
@@ -116,7 +114,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             }
             fragmentTransaction.replace(R.id.frame_layout_base, actualFragment, "c");
             fragmentTransaction.commit();
-        }
-        else super.onBackPressed();
+        } else super.onBackPressed();
     }
 }
