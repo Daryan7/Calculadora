@@ -5,22 +5,15 @@ import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 import com.example.juan.calculadora.Domain.Operands.Token;
 import com.example.juan.calculadora.Domain.Operands.OpenParenthesis;
 import com.example.juan.calculadora.Domain.Operands.Operand;
-import com.example.juan.calculadora.R;
 import com.example.juan.calculadora.UI.CalculatorActivity;
-
-import java.lang.reflect.Field;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 public class Calculator {
 
     private CalculatorActivity calculatorActivity;
-    private DecimalFormat decimalFormat;
     private static double lastResult;
 
     public Calculator(CalculatorActivity calculatorActivity) {
         this.calculatorActivity = calculatorActivity;
-        decimalFormat = new DecimalFormat("#.######");
     }
 
     public void newDigit(int digit) {
@@ -87,7 +80,7 @@ public class Calculator {
             if (!OpenParenthesis.goodParenthesis()) throw new WrongExpression("Parenthesis not well placed");
             executeStacks(numStack, operandStack);
             lastResult = numStack.getPop();
-            calculatorActivity.setResult(decimalFormat.format(lastResult));
+            calculatorActivity.setResult(Double.toString(lastResult));
             calculatorActivity.resetNextInput();
         }
         catch (WrongExpression exception) {

@@ -6,9 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.juan.calculadora.Data.AppDB;
 import com.example.juan.calculadora.R;
 
 public class RankingActivity extends Fragment {
+    private AppDB appDB;
+
+    @Override
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+
+        appDB = new AppDB(getContext());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
