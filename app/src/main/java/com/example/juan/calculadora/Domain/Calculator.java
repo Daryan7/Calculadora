@@ -5,7 +5,7 @@ import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 import com.example.juan.calculadora.Domain.Operands.Token;
 import com.example.juan.calculadora.Domain.Operands.OpenParenthesis;
 import com.example.juan.calculadora.Domain.Operands.Operand;
-import com.example.juan.calculadora.UI.CalculatorActivity;
+import com.example.juan.calculadora.UI.Activities.CalculatorActivity;
 
 public class Calculator {
 

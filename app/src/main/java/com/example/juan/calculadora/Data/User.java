@@ -13,7 +13,24 @@ public class User {
         this.points = points;
     }
 
+    public String getNickName() {
+        return nick;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
     public static User getCurrentUser() {
         return user;
+    }
+
+    @Override
+    public String toString() {
+        return nick + " " + points;
     }
 }

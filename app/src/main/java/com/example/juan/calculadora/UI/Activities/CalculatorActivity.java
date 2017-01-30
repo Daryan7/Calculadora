@@ -1,4 +1,4 @@
-package com.example.juan.calculadora.UI;
+package com.example.juan.calculadora.UI.Activities;
 
 import android.app.NotificationManager;
 import android.content.Context;
