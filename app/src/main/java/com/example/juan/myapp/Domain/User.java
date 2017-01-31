@@ -3,7 +3,7 @@ package com.example.juan.myapp.Domain;
 import android.net.Uri;
 
 public class User {
-    static User currentUser;
+    private static User currentUser = new User(0, "Daryan", 15, null);
 
     private String nick;
     private long id;
@@ -15,6 +15,14 @@ public class User {
         this.nick = nick;
         this.id = id;
         this.points = points;
+    }
+
+    public boolean hasProfilePic() {
+        return profileImage != null;
+    }
+
+    public Uri getProfileImage() {
+        return profileImage;
     }
 
     public String getNickName() {

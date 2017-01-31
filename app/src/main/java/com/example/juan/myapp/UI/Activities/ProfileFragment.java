@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.juan.myapp.Domain.User;
 import com.example.juan.myapp.R;
 import com.example.juan.myapp.UI.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -34,7 +37,19 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        User user = User.getCurrentUser();
+
         imageView = (ImageView) rootView.findViewById(R.id.profilePic);
+        if (user.hasProfilePic()) {
+            Log.v("h", "hewllo");
+            Picasso.with(getContext()).load(user.getProfileImage()).resize(600, 500).centerCrop().into(imageView);
+        }
+
+        TextView userName = (TextView)rootView.findViewById(R.id.nickName);
+        userName.setText(user.getNickName());
+
+        TextView pointsView = (TextView)rootView.findViewById(R.id.points);
+        pointsView.setText(Integer.toString(user.getPoints()));
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
