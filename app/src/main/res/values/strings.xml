@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyApp</string>
+    <string name="app_name">The App</string>
     <string name="_0">0</string>
     <string name="_1">1</string>
     <string name="_2">2</string>
@@ -31,10 +31,16 @@
     <string name="logout">Log out</string>
     <string name="toast_notification_text">Wrong expression</string>
     <string name="open_browser">Open browser</string>
+    <string name="profile">Profile</string>
 
     <string name="ranking">Ranking</string>
     <string name="calculator">Calculator</string>
 
     <string name="profile_points">Memory game record:</string>
     <string name="profile_moves">Moves</string>
+
+    <string name="welcome_title">Welcome to The App</string>
+    <string name="username_hint">User name</string>
+    <string name="password_hint">Password</string>
+    <string name="login_button">Log In</string>
 </resources>
