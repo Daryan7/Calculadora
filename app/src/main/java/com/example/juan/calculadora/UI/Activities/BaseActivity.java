@@ -49,7 +49,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             actualFragment = fragmentManager.getFragment(savedInstaceState, "actualFragment");
         }
         else if (actualFragment == null) {
-            actualFragment = new CalculatorActivity();
+            actualFragment = new CalculatorFragment();
         }
 
         fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
@@ -75,24 +75,24 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.calculator: {
                 navDrawer.closeDrawers();
-                if (actualFragment instanceof CalculatorActivity) return false;
+                if (actualFragment instanceof CalculatorFragment) return false;
                 item.setChecked(true);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
-                actualFragment = new CalculatorActivity();
+                actualFragment = new CalculatorFragment();
                 fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
                 fragmentTransaction.commit();
                 return true;
             }
             case R.id.ranking: {
                 navDrawer.closeDrawers();
-                if (actualFragment instanceof RankingActivity) return false;
+                if (actualFragment instanceof RankingFragment) return false;
                 item.setChecked(true);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
-                actualFragment = new RankingActivity();
+                actualFragment = new RankingFragment();
                 fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
                 fragmentTransaction.commit();
                 return true;
@@ -103,17 +103,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if (!(actualFragment instanceof CalculatorActivity)) {
+        if (!(actualFragment instanceof CalculatorFragment)) {
             menuItem.setChecked(true);
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
-            actualFragment = fragmentManager.findFragmentByTag("c");
-            if (actualFragment == null) {
-                actualFragment = new CalculatorActivity();
-            }
-            fragmentTransaction.replace(R.id.frame_layout_base, actualFragment, "c");
+            actualFragment = new CalculatorFragment();
+            fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
             fragmentTransaction.commit();
-        } else super.onBackPressed();
+        }
+        else super.onBackPressed();
     }
 }

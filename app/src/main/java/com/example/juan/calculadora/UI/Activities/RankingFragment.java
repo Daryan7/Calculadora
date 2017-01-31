@@ -1,36 +1,24 @@
 package com.example.juan.calculadora.UI.Activities;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 
-import com.example.juan.calculadora.Data.DBHelper;
-import com.example.juan.calculadora.Data.User;
-import com.example.juan.calculadora.Domain.Calculator;
+import com.example.juan.calculadora.Data.AppDB;
 import com.example.juan.calculadora.R;
-import com.example.juan.calculadora.UI.Adapters.RankingAdapter;
-import com.squareup.picasso.Picasso;
+import com.example.juan.calculadora.Domain.Adapters.RankingAdapter;
 
-import java.io.File;
-
-public class RankingActivity extends Fragment {
-    private DBHelper dbHelper;
+public class RankingFragment extends Fragment {
+    private AppDB dbHelper;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        dbHelper = new DBHelper(getContext());
+        dbHelper = new AppDB(getContext());
     }
 
     /*@Override
@@ -67,6 +55,7 @@ public class RankingActivity extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext());
         listView.setLayoutManager(linearLayoutManager);
         RankingAdapter adapter = new RankingAdapter(dbHelper.getAllUsers());
+        dbHelper.close();
         listView.setAdapter(adapter);
         return rootView;
     }

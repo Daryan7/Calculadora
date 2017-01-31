@@ -1,4 +1,4 @@
-package com.example.juan.calculadora.UI.Adapters;
+package com.example.juan.calculadora.Domain.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,11 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.juan.calculadora.Data.User;
+import com.example.juan.calculadora.Domain.User;
 import com.example.juan.calculadora.R;
 
 import java.util.List;
-import java.util.Locale;
 
 public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHolder> {
     private List<User> userList;

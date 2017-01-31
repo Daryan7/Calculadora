@@ -5,50 +5,50 @@ import com.example.juan.calculadora.Domain.Exceptions.WrongExpression;
 import com.example.juan.calculadora.Domain.Operands.Token;
 import com.example.juan.calculadora.Domain.Operands.OpenParenthesis;
 import com.example.juan.calculadora.Domain.Operands.Operand;
-import com.example.juan.calculadora.UI.Activities.CalculatorActivity;
+import com.example.juan.calculadora.UI.Activities.CalculatorFragment;
 
 public class Calculator {
 
-    private CalculatorActivity calculatorActivity;
+    private CalculatorFragment calculatorFragment;
     private static double lastResult;
 
-    public Calculator(CalculatorActivity calculatorActivity) {
-        this.calculatorActivity = calculatorActivity;
+    public Calculator(CalculatorFragment calculatorFragment) {
+        this.calculatorFragment = calculatorFragment;
     }
 
     public void newDigit(int digit) {
-        calculatorActivity.newSymbol(Integer.toString(digit));
+        calculatorFragment.newSymbol(Integer.toString(digit));
     }
 
     public void sum() {
-        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(FieldTextParser.ans);
-        calculatorActivity.newSymbol(FieldTextParser.sum);
+        if (calculatorFragment.doesNextInputResets()) calculatorFragment.newSymbol(FieldTextParser.ans);
+        calculatorFragment.newSymbol(FieldTextParser.sum);
     }
 
     public void subs() {
-        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(FieldTextParser.ans);
-        calculatorActivity.newSymbol(FieldTextParser.subs);
+        if (calculatorFragment.doesNextInputResets()) calculatorFragment.newSymbol(FieldTextParser.ans);
+        calculatorFragment.newSymbol(FieldTextParser.subs);
     }
 
     public void div() {
-        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(FieldTextParser.ans);
-        calculatorActivity.newSymbol(FieldTextParser.div);
+        if (calculatorFragment.doesNextInputResets()) calculatorFragment.newSymbol(FieldTextParser.ans);
+        calculatorFragment.newSymbol(FieldTextParser.div);
     }
 
     public void mul() {
-        if (calculatorActivity.doesNextInputResets()) calculatorActivity.newSymbol(FieldTextParser.ans);
-        calculatorActivity.newSymbol(FieldTextParser.mul);
+        if (calculatorFragment.doesNextInputResets()) calculatorFragment.newSymbol(FieldTextParser.ans);
+        calculatorFragment.newSymbol(FieldTextParser.mul);
     }
 
     public void del() {
-        if (calculatorActivity.fieldLenght() > 0 && calculatorActivity.lastSymbol() == 's') {
-            calculatorActivity.removeSymbols(FieldTextParser.ans.length());
+        if (calculatorFragment.fieldLenght() > 0 && calculatorFragment.lastSymbol() == 's') {
+            calculatorFragment.removeSymbols(FieldTextParser.ans.length());
         }
-        else calculatorActivity.removeSymbols(1);
+        else calculatorFragment.removeSymbols(1);
     }
 
     public void clear() {
-        calculatorActivity.clearField();
+        calculatorFragment.clearField();
     }
 
     private void executeStacks(Stack<Double> numStack, Stack<Token> operandStack) {
@@ -65,7 +65,7 @@ public class Calculator {
         OpenParenthesis.resetCounter();
         Stack<Double> numStack = new Stack<>();
         Stack<Token> operandStack = new Stack<>();
-        FieldTextParser parser = new FieldTextParser(calculatorActivity.getTextField());
+        FieldTextParser parser = new FieldTextParser(calculatorFragment.getTextField());
         try {
             Token lastToken = parser.nextToken();
             lastToken.initialToken();
@@ -80,11 +80,11 @@ public class Calculator {
             if (!OpenParenthesis.goodParenthesis()) throw new WrongExpression("Parenthesis not well placed");
             executeStacks(numStack, operandStack);
             lastResult = numStack.getPop();
-            calculatorActivity.setResult(Double.toString(lastResult));
-            calculatorActivity.resetNextInput();
+            calculatorFragment.setResult(Double.toString(lastResult));
+            calculatorFragment.resetNextInput();
         }
         catch (WrongExpression exception) {
-            calculatorActivity.onError();
+            calculatorFragment.onError();
         }
     }
 
@@ -93,18 +93,18 @@ public class Calculator {
     }
 
     public void comma() {
-        calculatorActivity.newSymbol(FieldTextParser.commma);
+        calculatorFragment.newSymbol(FieldTextParser.commma);
     }
 
     public void closePar() {
-        calculatorActivity.newSymbol(FieldTextParser.closePar);
+        calculatorFragment.newSymbol(FieldTextParser.closePar);
     }
 
     public void openPar() {
-        calculatorActivity.newSymbol(FieldTextParser.openPar);
+        calculatorFragment.newSymbol(FieldTextParser.openPar);
     }
 
     public void ans() {
-        calculatorActivity.newSymbol(FieldTextParser.ans);
+        calculatorFragment.newSymbol(FieldTextParser.ans);
     }
 }

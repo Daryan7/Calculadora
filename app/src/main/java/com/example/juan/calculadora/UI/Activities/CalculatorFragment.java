@@ -24,7 +24,7 @@ import com.example.juan.calculadora.UI.Listeners.FuncButtonListener;
 import com.example.juan.calculadora.UI.Listeners.NumButtonListener;
 import com.example.juan.calculadora.UI.Listeners.OperandButtonListener;
 
-public class CalculatorActivity extends Fragment {
+public class CalculatorFragment extends Fragment {
     private TextView inputField;
     private TextView outputField;
     private String actualString;

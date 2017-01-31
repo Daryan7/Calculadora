@@ -1,13 +1,13 @@
-package com.example.juan.calculadora.Data;
+package com.example.juan.calculadora.Domain;
 
 public class User {
-    static User user;
+    private static User currentUser;
 
     private String nick;
     private long id;
     private int points;
 
-    User(long id, String nick, int points) {
+    public User(long id, String nick, int points) {
         this.nick = nick;
         this.id = id;
         this.points = points;
@@ -26,11 +26,6 @@ public class User {
     }
 
     public static User getCurrentUser() {
-        return user;
-    }
-
-    @Override
-    public String toString() {
-        return nick + " " + points;
+        return currentUser;
     }
 }
