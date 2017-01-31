@@ -3,9 +3,12 @@ package com.example.juan.theapp.UI.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,8 @@ import com.example.juan.theapp.Domain.User;
 import com.example.juan.theapp.R;
 import com.example.juan.theapp.UI.Comunication.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 public class ProfileFragment extends Fragment {
 
@@ -60,7 +65,7 @@ public class ProfileFragment extends Fragment {
                 Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 getIntent.setType("image/*");
 
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 pickIntent.setType("image/*");
 
                 Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");

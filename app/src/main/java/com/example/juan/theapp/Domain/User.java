@@ -51,7 +51,6 @@ public class User {
 
     public static void logIn(Context context, String userName, String password) {
         AppDB appDB = new AppDB(context);
-        Log.v("user", userName + " " + password);
         currentUser = appDB.getAllUsers().get(0);
         appDB.close();
     }

@@ -8,6 +8,9 @@
         <item android:title="@string/calculator"
             android:id="@+id/calculator"
             android:icon="@drawable/ic_calculator"/>
+        <item android:id="@+id/game"
+            android:title="@string/game"
+            android:icon="@drawable/ic_game"/>
         <item android:title="@string/ranking"
             android:id="@+id/ranking"
             android:icon="@drawable/ic_ranking" />
