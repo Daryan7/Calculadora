@@ -1,13 +1,19 @@
 package com.example.juan.calculadora.Domain;
 
+import android.net.Uri;
+
+import java.net.URI;
+
 public class User {
-    private static User currentUser;
+    static User currentUser;
 
     private String nick;
     private long id;
     private int points;
+    private Uri profileImage;
 
-    public User(long id, String nick, int points) {
+    public User(long id, String nick, int points, Uri profileImage) {
+        this.profileImage = profileImage;
         this.nick = nick;
         this.id = id;
         this.points = points;

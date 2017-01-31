@@ -66,7 +66,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         getSupportFragmentManager().putFragment(outState, "actualFragment", actualFragment);
     }
 
