@@ -1,5 +1,6 @@
 package com.example.juan.theapp.UI.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -63,6 +64,19 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logOut: {
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            }
+            default: return false;
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.first_menu, menu);
         return true;
@@ -109,6 +123,18 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
                 actualFragment = new ProfileFragment();
+                fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
+                fragmentTransaction.commit();
+                return true;
+            }
+            case R.id.game: {
+                navDrawer.closeDrawers();
+                if (actualFragment instanceof MemoryFragment) return false;
+                item.setChecked(true);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction =
+                        fragmentManager.beginTransaction();
+                actualFragment = new MemoryFragment();
                 fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
                 fragmentTransaction.commit();
                 return true;
