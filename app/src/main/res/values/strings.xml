@@ -34,4 +34,7 @@
 
     <string name="ranking">Ranking</string>
     <string name="calculator">Calculator</string>
+
+    <string name="profile_points">Memory game record:</string>
+    <string name="profile_moves">Moves</string>
 </resources>
