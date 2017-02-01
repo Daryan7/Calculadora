@@ -41,13 +41,13 @@
             android:layout_height="match_parent">
             <ImageView
                 android:id="@+id/_1"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
             <ImageView
                 android:id="@+id/_2"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -55,7 +55,7 @@
                 android:layout_width="0dp" />
             <ImageView
                 android:id="@+id/_3"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"/>
             <ImageView
                 android:id="@+id/_4"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -77,13 +77,13 @@
             android:layout_height="match_parent">
             <ImageView
                 android:id="@+id/_5"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
             <ImageView
                 android:id="@+id/_6"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -91,7 +91,7 @@
                 android:layout_width="0dp" />
             <ImageView
                 android:id="@+id/_7"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -99,7 +99,7 @@
                 android:layout_height="match_parent"/>
             <ImageView
                 android:id="@+id/_8"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -112,13 +112,13 @@
             android:layout_width="match_parent">
             <ImageView
                 android:id="@+id/_9"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
             <ImageView
                 android:id="@+id/_10"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -126,7 +126,7 @@
                 android:layout_width="0dp" />
             <ImageView
                 android:id="@+id/_11"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -134,7 +134,7 @@
                 android:layout_height="match_parent"/>
             <ImageView
                 android:id="@+id/_12"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -145,13 +145,13 @@
             android:layout_weight="1">
             <ImageView
                 android:id="@+id/_13"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
             <ImageView
                 android:id="@+id/_14"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -159,7 +159,7 @@
                 android:layout_width="0dp" />
             <ImageView
                 android:id="@+id/_15"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
@@ -167,7 +167,7 @@
                 android:layout_height="match_parent"/>
             <ImageView
                 android:id="@+id/_16"
-                android:src="@drawable/memory_card"
+                android:src="@drawable/star_trek_logo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
