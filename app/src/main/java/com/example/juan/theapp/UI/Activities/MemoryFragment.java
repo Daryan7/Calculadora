@@ -1,12 +1,7 @@
 package com.example.juan.theapp.UI.Activities;
 
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.TimeUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +9,11 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 
 import com.example.juan.theapp.R;
+import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Time;
+
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Timer;
 
 public class MemoryFragment extends Fragment {
 
@@ -28,46 +21,88 @@ public class MemoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_memory, container, false);
-        GridLayout gridLayout = (GridLayout)rootView.findViewById(R.id.grid);
-        int count = gridLayout.getChildCount();
 
-        AssetManager manager = getActivity().getAssets();
+        final int[] resId = {R.drawable.borg, R.drawable.ferengi, R.drawable.klingon, R.drawable.maquis_emblem, R.drawable.reman, R.drawable.starfleet_tuc, R.drawable.ufp_2290c, R.drawable.romulan};
 
-        String[] files;
-        try {
-            files = manager.list("memory");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return rootView;
-        }
+        int numFiles = resId.length;
 
-        int numFiles = files.length;
+        ArrayList<Integer> randomArray = new ArrayList<>(numFiles * 2);
 
-        ArrayList<Integer> randomArray = new ArrayList<>(numFiles*2);
-
-        for (int i = 0; i < numFiles*2; ++i) {
-            randomArray.add(i%numFiles);
+        for (int i = 0; i < numFiles * 2; ++i) {
+            randomArray.add(i % numFiles);
         }
 
         Random random = new Random(System.currentTimeMillis());
 
-        for (int i = 0; i < count; ++i) {
+        /*for (int i = 0; i < count; ++i) {
             ImageView image = (ImageView) gridLayout.getChildAt(i);
             int randNum = random.nextInt(randomArray.size());
-            try {
-                // get input stream
-                InputStream ims = manager.open(files[randomArray.get(randNum)]);
-                // load image as Drawable
-                Drawable d = Drawable.createFromStream(ims, null);
-                // set image to ImageView
-                image.setImageDrawable(d);
-            }
-            catch(IOException exception) {
-                exception.printStackTrace();
-                return rootView;
-            }
+            //Picasso.with(getContext()).load(resId[randomArray.get(randNum)]).into(image);
+            image.setBackgroundResource(resId[randomArray.get(randNum)]);
             randomArray.remove(randNum);
-        }
+        }*/
+        ImageView image = (ImageView) rootView.findViewById(R.id._1);
+        int randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._2);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._3);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._4);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._5);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._6);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._7);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._8);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._9);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._10);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._11);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._12);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._13);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._14);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._15);
+        randNum = random.nextInt(randomArray.size());
+        image.setImageResource(resId[randomArray.get(randNum)]);
+        randomArray.remove(randNum);
+        image = (ImageView) rootView.findViewById(R.id._16);
+        image.setImageResource(resId[randomArray.get(0)]);
 
         return rootView;
     }
