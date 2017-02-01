@@ -30,11 +30,10 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 0) {
                 Uri selectedImageUri = data.getData();
-                Picasso.with(getContext()).load(selectedImageUri).resize(600, 500).centerCrop().into(imageView);
+                Picasso.with(getContext()).load(selectedImageUri).resize(600, 600).centerCrop().into(imageView);
                 User.getCurrentUser().setProfileImage(selectedImageUri);
                 mListener.updateUser();
             }
