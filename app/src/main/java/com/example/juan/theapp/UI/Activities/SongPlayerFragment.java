@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -27,7 +28,7 @@ import com.example.juan.theapp.Services.MusicService;
 import java.io.File;
 import java.io.IOException;
 
-public class SongPlayerFragment extends Fragment implements MediaPlayer.OnCompletionListener {
+public class SongPlayerFragment extends Fragment {
 
     private TextView songName;
     private SeekBar progressBar;
@@ -36,6 +37,7 @@ public class SongPlayerFragment extends Fragment implements MediaPlayer.OnComple
     private final static int refreshTime = 300;
     private boolean bound;
     private MusicService mService;
+    private Button playStopButton;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -43,6 +45,39 @@ public class SongPlayerFragment extends Fragment implements MediaPlayer.OnComple
             MusicService.LocalBinder binder = (MusicService.LocalBinder) service;
             mService = binder.getService();
             bound = true;
+
+            File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+
+            mediaPlayer = mService.getMediaPlayer();
+            if (!mediaPlayer.isPlaying()) {
+                try {
+                    mediaPlayer.setDataSource(sdCard.getAbsolutePath() + "/01 Dead Inside [Alta calidad].mp3");
+                    songName.setText("Dead Inside]");
+                    mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else progressBar.setProgress(mediaPlayer.getCurrentPosition());
+            setTimer();
+            progressBar.setMax(mediaPlayer.getDuration());
+            progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    if (mediaPlayer.isPlaying()) pauseSong();
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    mediaPlayer.seekTo(seekBar.getProgress());
+                    setTimer();
+                    startSong();
+                }
+            });
         }
 
         @Override
@@ -51,6 +86,28 @@ public class SongPlayerFragment extends Fragment implements MediaPlayer.OnComple
         }
     };
 
+    private void setTimer() {
+        timer = new CountDownTimer(mediaPlayer.getDuration()-mediaPlayer.getCurrentPosition(), refreshTime) {
+            public void onTick(long millisUntilFinished) {
+                progressBar.setProgress(mediaPlayer.getCurrentPosition());
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        };
+    }
+
+    private void startSong() {
+        mediaPlayer.start();
+        timer.start();
+    }
+
+    private void pauseSong() {
+        mediaPlayer.pause();
+        timer.cancel();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +115,17 @@ public class SongPlayerFragment extends Fragment implements MediaPlayer.OnComple
 
         songName = (TextView) rootView.findViewById(R.id.songName);
         progressBar = (SeekBar) rootView.findViewById(R.id.songProgess);
+        playStopButton = (Button) rootView.findViewById(R.id.playStopButton);
+
+        playStopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer.isPlaying()) {
+                    pauseSong();
+                }
+                else startSong();
+            }
+        });
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int hasPermission = getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -66,71 +134,7 @@ public class SongPlayerFragment extends Fragment implements MediaPlayer.OnComple
             }
         }
 
-        File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-
-        mediaPlayer = mService.getMediaPlayer();
-        try {
-            mediaPlayer.setDataSource(sdCard.getAbsolutePath() + "/01 Dead Inside [Alta calidad].mp3");
-            songName.setText("Dead Inside]");
-            mediaPlayer.prepare();
-            mediaPlayer.setOnCompletionListener(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mediaPlayer.start();
-        progressBar.setMax(mediaPlayer.getDuration());
-        progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                mediaPlayer.pause();
-                timer.cancel();
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                mediaPlayer.seekTo(seekBar.getProgress());
-                mediaPlayer.start();
-                timer = new CountDownTimer(mediaPlayer.getDuration() - mediaPlayer.getCurrentPosition(), refreshTime) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        onUpdateProgressBar();
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                    }
-                };
-                timer.start();
-            }
-        });
-        timer = new CountDownTimer(mediaPlayer.getDuration(), refreshTime) {
-            public void onTick(long millisUntilFinished) {
-                onUpdateProgressBar();
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        };
-        timer.start();
-
-
         return rootView;
-    }
-
-    private void onUpdateProgressBar() {
-        progressBar.setProgress(mediaPlayer.getCurrentPosition());
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        Log.v("mediaplayer", "finished");
     }
 
     @Override
@@ -145,6 +149,14 @@ public class SongPlayerFragment extends Fragment implements MediaPlayer.OnComple
     public void onStop() {
         super.onStop();
         if (bound) {
+            Intent intent = new Intent(getContext(), MusicService.class);
+            if (mediaPlayer.isPlaying()) {
+                mService.startForeground();
+                getActivity().startService(intent);
+            }
+            else {
+                getActivity().stopService(intent);
+            }
             getActivity().unbindService(mConnection);
             bound = false;
         }
