@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppDB extends SQLiteOpenHelper {
-    private static int BD_VERSION = 1;
+    private static int BD_VERSION = 8;
     private static String BD_NAME = "bd_project";
     private static String TABLE_NAME = "ranking";
     private SQLiteDatabase database;

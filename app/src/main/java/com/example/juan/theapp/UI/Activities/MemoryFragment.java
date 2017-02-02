@@ -1,32 +1,54 @@
 package com.example.juan.theapp.UI.Activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.SparseArray;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.juan.theapp.R;
-import com.squareup.picasso.Picasso;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 public class MemoryFragment extends Fragment {
 
     private SparseIntArray idMap;
+    private int flippedImage;
+    private int correctImages;
+    private int moves;
+    private View rootView;
+
+    private ImageView image1, image2;
+    private TextView moveView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_memory, container, false);
+        rootView = inflater.inflate(R.layout.fragment_memory, container, false);
+        moveView = (TextView)rootView.findViewById(R.id.moves);
+        setMemory();
+        return rootView;
+    }
+
+    public void onMove() {
+        ++moves;
+        moveView.setText(Integer.toString(moves));
+    }
+
+    public void setMemory() {
+        flippedImage = 0;
+        image1 = image2 = null;
+        correctImages = 0;
+        moves = 0;
 
         final int[] resId = {R.drawable.borg, R.drawable.ferengi, R.drawable.klingon, R.drawable.maquis_emblem, R.drawable.reman, R.drawable.starfleet_tuc, R.drawable.ufp_2290c, R.drawable.romulan};
         final int[] imageId = {R.id._1, R.id._2, R.id._3, R.id._4, R.id._5, R.id._6, R.id._7, R.id._8, R.id._9, R.id._10, R.id._11, R.id._12, R.id._13, R.id._14, R.id._15, R.id._16};
@@ -43,19 +65,64 @@ public class MemoryFragment extends Fragment {
 
         Random random = new Random(System.currentTimeMillis());
 
+        final View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageView image = (ImageView) view;
+                if (!(boolean)image.getTag() && flippedImage < 2) {
+                    if (image1 == null) image1 = image;
+                    else image2 = image;
+                    int id = idMap.get(view.getId());
+                    image.setImageResource(id);
+                    image.setTag(true);
+                    ++flippedImage;
+                    if (flippedImage == 2) {
+                        onMove();
+                        if (id == idMap.get(image1.getId())) {
+                            flippedImage = 0;
+                            image1 = image2 = null;
+                            ++correctImages;
+                            if (correctImages == 8) onWin();
+                        }
+                        else {
+                            Handler handler = new Handler();
+                            Runnable runnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    image1.setImageResource(R.drawable.star_trek_logo);
+                                    image2.setImageResource(R.drawable.star_trek_logo);
+                                    image1.setTag(false);
+                                    image2.setTag(false);
+                                    image1 = image2 = null;
+                                    flippedImage = 0;
+                                }
+                            };
+                            handler.postDelayed(runnable, 2000);
+                        }
+                    }
+                }
+            }
+        };
+
         for (int anImageId : imageId) {
             int randNum = random.nextInt(randomArray.size());
             idMap.put(anImageId, resId[randomArray.get(randNum)]);
-            rootView.findViewById(anImageId).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ImageView image = (ImageView) view;
-                    image.setImageResource(idMap.get(view.getId()));
-                }
-            });
+            ImageView image = (ImageView) rootView.findViewById(anImageId);
+            image.setOnClickListener(listener);
+            image.setTag(false);
             randomArray.remove(randNum);
         }
+    }
 
-        return rootView;
+    private void onWin() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("You won!")
+                .setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        setMemory();
+                    }
+                })
+                .show();
     }
 }

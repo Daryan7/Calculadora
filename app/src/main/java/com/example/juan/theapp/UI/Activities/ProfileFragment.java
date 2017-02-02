@@ -1,10 +1,13 @@
 package com.example.juan.theapp.UI.Activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -41,14 +44,25 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         User user = User.getCurrentUser();
 
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int hasWriteContactsPermission = getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+            }
+        }
+
         imageView = (ImageView) rootView.findViewById(R.id.profilePic);
         if (user.hasProfilePic()) {
+            if (android.os.Build.VERSION.SDK_INT >= 19) {
+                // Check for the freshest data.
+                getActivity().getContentResolver().takePersistableUriPermission(user.getProfileImage(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
             Picasso.with(getContext()).load(user.getProfileImage()).resize(600, 500).centerCrop().into(imageView);
         }
 
@@ -61,16 +75,25 @@ public class ProfileFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                getIntent.setType("image/*");
+                Intent intent;
+                if (android.os.Build.VERSION.SDK_INT >= 19) {
+                    // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+                    // browser.
+                    intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                }
+                else {
+                    intent = new Intent(Intent.ACTION_GET_CONTENT);
+                }
+                // Filter to only show results that can be "opened", such as a
+                // file (as opposed to a list of contacts or timezones)
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setType("image/*");
-
-                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-                startActivityForResult(chooserIntent, 0);
+                // Filter to show only images, using the image MIME data type.
+                // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+                // To search for all documents available via installed storage providers,
+                // it would be "*/*".
+                intent.setType("image/*");
+                startActivityForResult(intent, 0);
             }
         });
 
