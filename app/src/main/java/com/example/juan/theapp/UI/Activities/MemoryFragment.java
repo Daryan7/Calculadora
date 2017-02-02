@@ -89,8 +89,7 @@ public class MemoryFragment extends Fragment {
                     int id = idMap.get(view.getId());
                     image.setImageResource(id);
                     image.setTag(true);
-                    ++flippedImage;
-                    if (flippedImage == 2) {
+                    if (++flippedImage == 2) {
                         onMove();
                         if (id == idMap.get(image1.getId())) {
                             flippedImage = 0;

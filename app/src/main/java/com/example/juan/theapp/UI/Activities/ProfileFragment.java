@@ -5,26 +5,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.juan.theapp.Data.AppDB;
 import com.example.juan.theapp.Domain.User;
 import com.example.juan.theapp.R;
 import com.example.juan.theapp.UI.Comunication.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
 
 public class ProfileFragment extends Fragment {
 
@@ -38,7 +32,12 @@ public class ProfileFragment extends Fragment {
                 Uri selectedImageUri = data.getData();
                 Picasso.with(getContext()).load(selectedImageUri).resize(600, 600).centerCrop().into(imageView);
                 User.getCurrentUser().setProfileImage(selectedImageUri);
-                mListener.updateUser();
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        mListener.updateUser();
+                    }
+                }.run();
             }
         }
     }
@@ -51,8 +50,8 @@ public class ProfileFragment extends Fragment {
         User user = User.getCurrentUser();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int hasWriteContactsPermission = getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-            if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+            int hasPermission = getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (hasPermission != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
             }
         }
@@ -60,10 +59,9 @@ public class ProfileFragment extends Fragment {
         imageView = (ImageView) rootView.findViewById(R.id.profilePic);
         if (user.hasProfilePic()) {
             if (android.os.Build.VERSION.SDK_INT >= 19) {
-                // Check for the freshest data.
                 getActivity().getContentResolver().takePersistableUriPermission(user.getProfileImage(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
-            Picasso.with(getContext()).load(user.getProfileImage()).resize(600, 500).centerCrop().into(imageView);
+            Picasso.with(getContext()).load(user.getProfileImage()).resize(600, 600).centerCrop().into(imageView);
         }
 
         TextView userName = (TextView)rootView.findViewById(R.id.nickName);
@@ -77,21 +75,10 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent;
                 if (android.os.Build.VERSION.SDK_INT >= 19) {
-                    // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
-                    // browser.
                     intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 }
-                else {
-                    intent = new Intent(Intent.ACTION_GET_CONTENT);
-                }
-                // Filter to only show results that can be "opened", such as a
-                // file (as opposed to a list of contacts or timezones)
+                else intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-                // Filter to show only images, using the image MIME data type.
-                // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
-                // To search for all documents available via installed storage providers,
-                // it would be "*/*".
                 intent.setType("image/*");
                 startActivityForResult(intent, 0);
             }

@@ -128,7 +128,7 @@ public class CalculatorFragment extends Fragment {
                 state = !state;
                 SharedPreferences notificationSettings = getActivity().getSharedPreferences("notificationSettings", 0);
                 SharedPreferences.Editor editor = notificationSettings.edit();
-                editor.putBoolean("toast", toast);
+                editor.putBoolean("state", toast);
                 editor.apply();
                 item.setChecked(state);
                 return true;
