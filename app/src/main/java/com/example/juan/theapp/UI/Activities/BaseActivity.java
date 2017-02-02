@@ -55,7 +55,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             actualFragment = fragmentManager.getFragment(savedInstaceState, "actualFragment");
         }
         else if (actualFragment == null) {
-            actualFragment = new SongPlayerFragment();
+            Intent intent = getIntent();
+            if (intent.getBooleanExtra("musicPlayer", false)) {
+                actualFragment = new SongPlayerFragment();
+            }
+            else actualFragment = new SongPlayerFragment();
         }
 
         fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);

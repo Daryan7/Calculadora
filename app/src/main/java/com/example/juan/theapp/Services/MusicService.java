@@ -52,6 +52,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         .setContentText("Texto de contenido");
 
         Intent resultIntent = new Intent(this, BaseActivity.class);
+        resultIntent.putExtra("musicPlayer", true);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(BaseActivity.class);
         stackBuilder.addNextIntent(resultIntent);
@@ -77,7 +78,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Log.v("mediaplayer", "finished");
         player.reset();
     }
 }

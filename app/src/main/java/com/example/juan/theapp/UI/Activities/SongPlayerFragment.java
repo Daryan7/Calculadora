@@ -38,6 +38,17 @@ public class SongPlayerFragment extends Fragment {
     private boolean bound;
     private MusicService mService;
 
+    private File firstFileFound(File parent) {
+        if (parent.isFile()) return parent;
+
+        for (File file : parent.listFiles()) {
+            File found = firstFileFound(file);
+            if (found != null) return found;
+        }
+
+        return null;
+    }
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
@@ -47,9 +58,13 @@ public class SongPlayerFragment extends Fragment {
             mediaPlayer = mService.getMediaPlayer();
             if (!mediaPlayer.isPlaying()) {
                 File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+                File firstSong = firstFileFound(sdCard);
+                //TODO: Tratamiento de errores
                 try {
-                    mediaPlayer.setDataSource(sdCard.getAbsolutePath() + "/01 Dead Inside [Alta calidad].mp3");
-                    songName.setText("Dead Inside]");
+                    assert firstSong != null;
+                    Log.v("medaPlayer", firstSong.getAbsolutePath());
+                    mediaPlayer.setDataSource(firstSong.getAbsolutePath());
+                    songName.setText(firstSong.getName());
                     mediaPlayer.prepare();
                 } catch (IOException e) {
                     e.printStackTrace();
