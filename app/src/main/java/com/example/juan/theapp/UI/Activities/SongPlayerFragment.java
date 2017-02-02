@@ -62,14 +62,12 @@ public class SongPlayerFragment extends Fragment {
                 //TODO: Tratamiento de errores
                 try {
                     assert firstSong != null;
-                    Log.v("medaPlayer", firstSong.getAbsolutePath());
-                    mediaPlayer.setDataSource(firstSong.getAbsolutePath());
-                    songName.setText(firstSong.getName());
-                    mediaPlayer.prepare();
+                    mService.prepare(firstSong);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+            songName.setText(mService.getSong().getName());
             setTimer();
             if (mediaPlayer.isPlaying()) timer.start();
             progressBar.setMax(mediaPlayer.getDuration());

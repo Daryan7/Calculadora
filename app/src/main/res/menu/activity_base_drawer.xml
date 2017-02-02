@@ -14,5 +14,8 @@
         <item android:title="@string/ranking"
             android:id="@+id/ranking"
             android:icon="@drawable/ic_ranking" />
+        <item android:title="@string/song_player"
+            android:id="@+id/musicPlayer"
+            android:icon="@drawable/ic_player"/>
     </group>
 </menu>

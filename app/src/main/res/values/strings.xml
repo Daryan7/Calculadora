@@ -33,6 +33,7 @@
     <string name="open_browser">Open browser</string>
     <string name="profile">Profile</string>
     <string name="game">Memory game</string>
+    <string name="song_player">Music player</string>
 
     <string name="ranking">Ranking</string>
     <string name="calculator">Calculator</string>

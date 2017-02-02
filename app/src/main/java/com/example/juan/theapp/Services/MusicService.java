@@ -14,10 +14,12 @@ import android.util.Log;
 import com.example.juan.theapp.R;
 import com.example.juan.theapp.UI.Activities.BaseActivity;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MusicService extends Service implements MediaPlayer.OnCompletionListener {
     private MediaPlayer player;
+    private File song;
     private final IBinder mBinder = new LocalBinder();
 
     public MusicService() {
@@ -29,6 +31,16 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         public MusicService getService() {
             return MusicService.this;
         }
+    }
+
+    public File getSong() {
+        return song;
+    }
+
+    public void prepare(File file) throws IOException {
+        song = file;
+        player.setDataSource(file.getAbsolutePath());
+        player.prepare();
     }
 
     @Override
@@ -47,12 +59,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     public void startForeground() {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_error)
-                        .setContentTitle("Playing something")
-                        .setContentText("Texto de contenido");
+                        .setSmallIcon(R.drawable.ic_player)
+                        .setContentTitle("Playing something");
 
         Intent resultIntent = new Intent(this, BaseActivity.class);
         resultIntent.putExtra("musicPlayer", true);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(BaseActivity.class);
         stackBuilder.addNextIntent(resultIntent);

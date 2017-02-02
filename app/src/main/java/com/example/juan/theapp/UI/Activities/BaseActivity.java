@@ -43,25 +43,26 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        menuItem = navigationView.getMenu().findItem(R.id.profile);
-        menuItem.setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
                 fragmentManager.beginTransaction();
-
         if (savedInstaceState != null) {
             actualFragment = fragmentManager.getFragment(savedInstaceState, "actualFragment");
         }
         else if (actualFragment == null) {
             Intent intent = getIntent();
             if (intent.getBooleanExtra("musicPlayer", false)) {
+                menuItem = navigationView.getMenu().findItem(R.id.musicPlayer);
                 actualFragment = new SongPlayerFragment();
             }
-            else actualFragment = new SongPlayerFragment();
+            else {
+                menuItem = navigationView.getMenu().findItem(R.id.profile);
+                actualFragment = new ProfileFragment();
+            }
         }
-
+        menuItem.setChecked(true);
         fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
@@ -72,7 +73,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.logOut: {
                 Intent intent = new Intent(this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 return true;
             }
@@ -139,6 +140,18 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
                 actualFragment = new MemoryFragment();
+                fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
+                fragmentTransaction.commit();
+                return true;
+            }
+            case R.id.musicPlayer: {
+                navDrawer.closeDrawers();
+                if (actualFragment instanceof SongPlayerFragment) return false;
+                item.setChecked(true);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction =
+                        fragmentManager.beginTransaction();
+                actualFragment = new SongPlayerFragment();
                 fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
                 fragmentTransaction.commit();
                 return true;
