@@ -37,7 +37,6 @@ public class SongPlayerFragment extends Fragment {
     private final static int refreshTime = 300;
     private boolean bound;
     private MusicService mService;
-    private Button playStopButton;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -45,11 +44,9 @@ public class SongPlayerFragment extends Fragment {
             MusicService.LocalBinder binder = (MusicService.LocalBinder) service;
             mService = binder.getService();
             bound = true;
-
-            File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-
             mediaPlayer = mService.getMediaPlayer();
             if (!mediaPlayer.isPlaying()) {
+                File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
                 try {
                     mediaPlayer.setDataSource(sdCard.getAbsolutePath() + "/01 Dead Inside [Alta calidad].mp3");
                     songName.setText("Dead Inside]");
@@ -58,8 +55,8 @@ public class SongPlayerFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-            else progressBar.setProgress(mediaPlayer.getCurrentPosition());
             setTimer();
+            if (mediaPlayer.isPlaying()) timer.start();
             progressBar.setMax(mediaPlayer.getDuration());
             progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -91,7 +88,6 @@ public class SongPlayerFragment extends Fragment {
             public void onTick(long millisUntilFinished) {
                 progressBar.setProgress(mediaPlayer.getCurrentPosition());
             }
-
             @Override
             public void onFinish() {
             }
@@ -115,7 +111,7 @@ public class SongPlayerFragment extends Fragment {
 
         songName = (TextView) rootView.findViewById(R.id.songName);
         progressBar = (SeekBar) rootView.findViewById(R.id.songProgess);
-        playStopButton = (Button) rootView.findViewById(R.id.playStopButton);
+        Button playStopButton = (Button) rootView.findViewById(R.id.playStopButton);
 
         playStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +145,8 @@ public class SongPlayerFragment extends Fragment {
     public void onStop() {
         super.onStop();
         if (bound) {
+            timer.cancel();
+            timer = null;
             Intent intent = new Intent(getContext(), MusicService.class);
             if (mediaPlayer.isPlaying()) {
                 mService.startForeground();
