@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.example.juan.theapp.Domain.Calculator;
 import com.example.juan.theapp.R;
-import com.example.juan.theapp.UI.Comunication.OnFragmentInteractionListener;
 import com.example.juan.theapp.UI.Listeners.FuncButtonListener;
 import com.example.juan.theapp.UI.Listeners.NumButtonListener;
 import com.example.juan.theapp.UI.Listeners.OperandButtonListener;
@@ -29,7 +28,6 @@ public class CalculatorFragment extends Fragment {
     private TextView outputField;
     private String actualString;
     private Calculator calculator;
-    private OnFragmentInteractionListener mListener;
     private boolean toast, state;
     private boolean nextInputResets;
 
@@ -115,28 +113,26 @@ public class CalculatorFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        }
-        else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.toastNotification:
+            case R.id.toastNotification: {
                 toast = !toast;
                 item.setChecked(toast);
+                SharedPreferences notificationSettings = getActivity().getSharedPreferences("notificationSettings", 0);
+                SharedPreferences.Editor editor = notificationSettings.edit();
+                editor.putBoolean("toast", toast);
+                editor.apply();
                 return true;
-            case R.id.stateNotification:
+            }
+            case R.id.stateNotification: {
                 state = !state;
+                SharedPreferences notificationSettings = getActivity().getSharedPreferences("notificationSettings", 0);
+                SharedPreferences.Editor editor = notificationSettings.edit();
+                editor.putBoolean("toast", toast);
+                editor.apply();
                 item.setChecked(state);
                 return true;
+            }
             case R.id.call: {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + actualString));
                 startActivity(intent);
@@ -205,19 +201,6 @@ public class CalculatorFragment extends Fragment {
         outputField.setText(number);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        SharedPreferences notificationSettings = getActivity().getSharedPreferences("notificationSettings", 0);
-        SharedPreferences.Editor editor = notificationSettings.edit();
-
-        editor.putBoolean("toast", toast);
-        editor.putBoolean("state", state);
-
-        editor.apply();
-    }
-
     public void resetNextInput() {
         nextInputResets = true;
     }
@@ -230,7 +213,7 @@ public class CalculatorFragment extends Fragment {
         return actualString.charAt(actualString.length()-1);
     }
 
-    public int fieldLenght() {
+    public int fieldLength() {
         return actualString.length();
     }
 }

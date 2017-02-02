@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppDB extends SQLiteOpenHelper {
-    private static int BD_VERSION = 8;
+    private static int BD_VERSION = 10;
     private static String BD_NAME = "bd_project";
     private static String TABLE_NAME = "ranking";
     private SQLiteDatabase database;
@@ -33,8 +33,8 @@ public class AppDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME+" ("+Column.ID+" INTEGER PRIMARY KEY,"+Column.NICK+" TEXT UNIQUE,"+Column.POINTS+" INTEGER, "+Column.IMAGE+" TEXT)");
         sqLiteDatabase.execSQL("INSERT INTO "+ TABLE_NAME +" ("+Column.NICK+", "+Column.POINTS+") " +
-                "VALUES('jugador1','15'), ('jugador2', '30'), ('jugador3','8'), ('jugador4','1'), ('jugador5','10')," +
-                "('jugador6','11'), ('jugador7','6'), ('jugador8','5')");
+                "VALUES('jugador1','99'), ('jugador2', '99'), ('jugador3','99'), ('jugador4','99'), ('jugador5','99')," +
+                "('jugador6','99'), ('jugador7','99'), ('jugador8','99')");
     }
 
     public User getUserWithNick(String name) {

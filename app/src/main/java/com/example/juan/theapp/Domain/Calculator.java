@@ -41,7 +41,7 @@ public class Calculator {
     }
 
     public void del() {
-        if (calculatorFragment.fieldLenght() > 0 && calculatorFragment.lastSymbol() == 's') {
+        if (calculatorFragment.fieldLength() > 0 && calculatorFragment.lastSymbol() == 's') {
             calculatorFragment.removeSymbols(FieldTextParser.ans.length());
         }
         else calculatorFragment.removeSymbols(1);

@@ -129,7 +129,6 @@ public class MemoryFragment extends Fragment {
             randomArray.remove(randNum);
         }
 
-        onWin();
         return rootView;
     }
 
@@ -188,22 +187,27 @@ public class MemoryFragment extends Fragment {
     }
 
     private void onWin() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                .setTitle("You won!")
-                .setPositiveButton("Restart", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.v("memory", "setting");
-                        resetMemory();
-                    }
-                });
         String message = "Points: " + Integer.toString(moves);
         User user = User.getCurrentUser();
         if (moves < user.getPoints()) {
             user.setPoints(moves);
-            mListener.updateUser();
+            new Runnable() {
+                @Override
+                public void run() {
+                    mListener.updateUser();
+                }
+            }.run();
             message += "\nNew Record!";
         }
-        builder.setMessage(message).show();
+        new AlertDialog.Builder(getContext())
+                .setTitle("You won!")
+                .setMessage(message)
+                .setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        resetMemory();
+                    }
+                })
+                .show();
     }
 }
