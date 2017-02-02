@@ -46,4 +46,6 @@
     <string name="login_button">Log In</string>
 
     <string name="memory_moves_indicator">Moves:</string>
+
+    <string name="restart_memory">Restart</string>
 </resources>

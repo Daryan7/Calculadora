@@ -45,6 +45,10 @@ public class User {
         profileImage = uri;
     }
 
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
     public static User getCurrentUser() {
         return currentUser;
     }

@@ -49,7 +49,7 @@ public class AppDB extends SQLiteOpenHelper {
 
     public void updateUser(User user) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Column.IMAGE, user.getProfileImage().toString());
+        if (user.hasProfilePic()) contentValues.put(Column.IMAGE, user.getProfileImage().toString());
         contentValues.put(Column.POINTS, user.getPoints());
 
         database.update(TABLE_NAME, contentValues, Column.ID+"="+user.getId(), null);
