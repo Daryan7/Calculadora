@@ -1,12 +1,12 @@
 package com.example.juan.theapp.UI.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.juan.theapp.Domain.User;
 import com.example.juan.theapp.R;
@@ -27,24 +27,31 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TWITTER_SECRET = "grGai5S2wkTOcZaAieKWWf6T4Xh2YQdw51p71CgkojWn7LyNEY";
 
     private TwitterLoginButton loginButton;
-    private EditText loginText;
-    private EditText passwordText;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
         super.onCreate(savedInstaceState);
+        setContentView(R.layout.activity_login);
+        final SharedPreferences notificationSettings = getSharedPreferences("users", 0);
+        if (notificationSettings.getBoolean("login", false)) {
+            long id = notificationSettings.getLong("id", -1);
+            User.logIn(getApplicationContext(), id);
+            Intent intent = new Intent(getApplicationContext(), BaseActivity.class);
+            startActivity(intent);
+            return;
+        }
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
-        setContentView(R.layout.activity_login);
-
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                // The TwitterSession is also available through:
-                // Twitter.getInstance().core.getSessionManager().getActiveSession()
                 TwitterSession session = result.data;
-                User.logIn(getApplicationContext(), session.getUserName(), session.getUserId());
+                SharedPreferences.Editor editor = notificationSettings.edit();
+                editor.putLong("id", session.getUserId());
+                editor.putBoolean("login", true);
+                editor.apply();
+                User.registerIfNotExist(getApplicationContext(), session.getUserName(), session.getUserId());
                 Intent intent = new Intent(getApplicationContext(), BaseActivity.class);
                 startActivity(intent);
             }
@@ -53,10 +60,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("TwitterKit", "Login with Twitter failure", exception);
             }
         });
-
-
-        loginText = (EditText)findViewById(R.id.loginText);
-        passwordText = (EditText)findViewById(R.id.passwordText);
 
         findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,8 +71,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Make sure that the loginButton hears the result from any
-        // Activity that it triggered.
         loginButton.onActivityResult(requestCode, resultCode, data);
     }
 

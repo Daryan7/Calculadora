@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppDB extends SQLiteOpenHelper {
-    private static int BD_VERSION = 12;
+    private static int BD_VERSION = 13;
     private static String BD_NAME = "bd_project";
     private static String TABLE_NAME = "ranking";
     private SQLiteDatabase database;
@@ -34,8 +34,7 @@ public class AppDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME+" ("+Column.ID+" INTEGER PRIMARY KEY,"+Column.NICK+" TEXT UNIQUE,"+Column.POINTS+" INTEGER, "+Column.IMAGE+" TEXT)");
         sqLiteDatabase.execSQL("INSERT INTO "+ TABLE_NAME +" ("+Column.NICK+", "+Column.POINTS+") " +
-                "VALUES('jugador1','-1'), ('jugador2', '-1'), ('jugador3','-1'), ('jugador4','-1'), ('jugador5','-1')," +
-                "('jugador6','-1'), ('jugador7','-1'), ('jugador8' , '-1')");
+                "VALUES('Guest','-1')");
     }
 
     public User getUserWithId(long id) {
@@ -52,8 +51,7 @@ public class AppDB extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Column.ID, user.getId());
         contentValues.put(Column.POINTS, user.getPoints());
-        Uri uri = user.getProfileImage();
-        contentValues.put(Column.IMAGE, uri == null ? null:uri.toString());
+        if (user.hasProfilePic()) contentValues.put(Column.IMAGE, user.getProfileImage().toString());
         contentValues.put(Column.NICK, user.getNickName());
         long id = database.insert(TABLE_NAME, null, contentValues);
         if (id == -1) Log.e("Database", "Something happened!");
