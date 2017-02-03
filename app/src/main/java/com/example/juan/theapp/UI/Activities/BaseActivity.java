@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import com.example.juan.theapp.Data.AppDB;
 import com.example.juan.theapp.Domain.User;
 import com.example.juan.theapp.R;
+import com.example.juan.theapp.Services.MusicService;
 import com.example.juan.theapp.UI.Comunication.OnFragmentInteractionListener;
 
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
@@ -48,19 +49,23 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
                 fragmentManager.beginTransaction();
+        int menuId = -1;
         if (savedInstaceState != null) {
             actualFragment = fragmentManager.getFragment(savedInstaceState, "actualFragment");
+            menuId = savedInstaceState.getInt("menuId");
+            menuItem = navigationView.getMenu().findItem(menuId);
         }
         else if (actualFragment == null) {
             Intent intent = getIntent();
             if (intent.getBooleanExtra("musicPlayer", false)) {
-                menuItem = navigationView.getMenu().findItem(R.id.musicPlayer);
+                menuId = R.id.musicPlayer;
                 actualFragment = new SongPlayerFragment();
             }
             else {
-                menuItem = navigationView.getMenu().findItem(R.id.profile);
+                menuId = R.id.profile;
                 actualFragment = new ProfileFragment();
             }
+            menuItem = navigationView.getMenu().findItem(menuId);
         }
         menuItem.setChecked(true);
         fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
@@ -69,28 +74,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logOut: {
-                Intent intent = new Intent(this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                return true;
-            }
-            default: return false;
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.first_menu, menu);
-        return true;
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         getSupportFragmentManager().putFragment(outState, "actualFragment", actualFragment);
+        outState.putInt("menuId", menuItem.getItemId());
     }
 
     @Override
@@ -154,6 +141,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 actualFragment = new SongPlayerFragment();
                 fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
                 fragmentTransaction.commit();
+                return true;
+            }
+            case R.id.logOut: {
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                if (actualFragment instanceof SongPlayerFragment) ((SongPlayerFragment)actualFragment).unBind();
+                Intent intent1 = new Intent(this, MusicService.class);
+                stopService(intent1);
+                startActivity(intent);
                 return true;
             }
         }

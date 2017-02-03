@@ -45,7 +45,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onDestroy() {
-        player.stop();
         player.release();
         Log.v("ma", "me destruyo");
     }
@@ -60,7 +59,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_player)
-                        .setContentTitle("Playing something");
+                        .setContentTitle("Playing " + song.getName());
 
         Intent resultIntent = new Intent(this, BaseActivity.class);
         resultIntent.putExtra("musicPlayer", true);
@@ -79,17 +78,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         startForeground(1, mBuilder.build());
     }
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        return super.onUnbind(intent);
-    }
-
     public MediaPlayer getMediaPlayer() {
         return player;
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        player.reset();
+        stopSelf();
     }
 }

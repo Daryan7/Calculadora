@@ -154,12 +154,18 @@ public class SongPlayerFragment extends Fragment {
         getActivity().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
+    void unBind() {
+        timer.cancel();
+        mediaPlayer.release();
+        getActivity().unbindService(mConnection);
+        bound = false;
+    }
+
     @Override
     public void onStop() {
         super.onStop();
         if (bound) {
             timer.cancel();
-            timer = null;
             Intent intent = new Intent(getContext(), MusicService.class);
             if (mediaPlayer.isPlaying()) {
                 mService.startForeground();
@@ -168,6 +174,7 @@ public class SongPlayerFragment extends Fragment {
             else {
                 getActivity().stopService(intent);
             }
+            Log.v("s", "unbindgin");
             getActivity().unbindService(mConnection);
             bound = false;
         }
