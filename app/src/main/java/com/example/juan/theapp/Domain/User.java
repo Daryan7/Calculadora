@@ -2,9 +2,13 @@ package com.example.juan.theapp.Domain;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.example.juan.theapp.Data.AppDB;
+
+import java.io.Serializable;
 
 public class User {
     private static User currentUser;
@@ -61,6 +65,10 @@ public class User {
             appDB.registerUser(currentUser);
         }
         appDB.close();
+    }
+
+    public static void logOut() {
+        currentUser = null;
     }
 
     public static void logIn(Context context, long id) {

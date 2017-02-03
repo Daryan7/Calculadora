@@ -174,7 +174,6 @@ public class SongPlayerFragment extends Fragment {
             else {
                 getActivity().stopService(intent);
             }
-            Log.v("s", "unbindgin");
             getActivity().unbindService(mConnection);
             bound = false;
         }

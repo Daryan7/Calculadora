@@ -141,6 +141,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
             case R.id.logOut: {
+                User.logOut();
                 SharedPreferences notificationSettings = getSharedPreferences("users", 0);
                 SharedPreferences.Editor editor = notificationSettings.edit();
                 editor.putBoolean("login", false);
