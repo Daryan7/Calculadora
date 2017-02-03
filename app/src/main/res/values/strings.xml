@@ -44,7 +44,7 @@
     <string name="welcome_title">Welcome to The App</string>
     <string name="username_hint">User name</string>
     <string name="password_hint">Password</string>
-    <string name="login_button">Log In</string>
+    <string name="login_button">Enter as Guest</string>
 
     <string name="memory_moves_indicator">Moves:</string>
 

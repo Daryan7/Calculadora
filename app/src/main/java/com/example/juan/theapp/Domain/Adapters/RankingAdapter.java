@@ -18,12 +18,16 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
         this.userList = userList;
     }
 
+    public void removeAllData() {
+        userList.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.ranking_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
+        return new ViewHolder(v);
     }
 
     @Override

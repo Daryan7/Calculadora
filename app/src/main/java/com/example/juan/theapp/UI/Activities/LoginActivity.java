@@ -64,6 +64,9 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                User.logIn(getApplicationContext(), -1);
+                Intent intent = new Intent(getApplicationContext(), BaseActivity.class);
+                startActivity(intent);
             }
         });
     }

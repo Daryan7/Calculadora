@@ -178,6 +178,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public AppDB getDataBase() {
+        return database;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         database.close();

@@ -68,7 +68,7 @@ public class ProfileFragment extends Fragment {
             }
             catch (SecurityException exception) {
                 user.setProfileImage(null);
-                Toast.makeText(getContext(), "Unfortunately, your profile image can't be displayed", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Unfortunately, your profile picture can't be displayed", Toast.LENGTH_LONG).show();
             }
         }
 

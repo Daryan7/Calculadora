@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppDB extends SQLiteOpenHelper {
-    private static int BD_VERSION = 13;
+    private static int BD_VERSION = 1;
     private static String BD_NAME = "bd_project";
     private static String TABLE_NAME = "ranking";
     private SQLiteDatabase database;
@@ -33,8 +33,8 @@ public class AppDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME+" ("+Column.ID+" INTEGER PRIMARY KEY,"+Column.NICK+" TEXT UNIQUE,"+Column.POINTS+" INTEGER, "+Column.IMAGE+" TEXT)");
-        sqLiteDatabase.execSQL("INSERT INTO "+ TABLE_NAME +" ("+Column.NICK+", "+Column.POINTS+") " +
-                "VALUES('Guest','-1')");
+        sqLiteDatabase.execSQL("INSERT INTO "+ TABLE_NAME +" ("+Column.ID+", "+Column.NICK+", "+Column.POINTS+") " +
+                "VALUES('-1','Guest','-1')");
     }
 
     public User getUserWithId(long id) {
@@ -55,6 +55,12 @@ public class AppDB extends SQLiteOpenHelper {
         contentValues.put(Column.NICK, user.getNickName());
         long id = database.insert(TABLE_NAME, null, contentValues);
         if (id == -1) Log.e("Database", "Something happened!");
+    }
+
+    public void resetPoints() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Column.POINTS, -1);
+        database.update(TABLE_NAME, contentValues, null, null);
     }
 
     public void updateUser(User user) {
@@ -92,6 +98,7 @@ public class AppDB extends SQLiteOpenHelper {
 
     @Override
     public void close() {
+        super.close();
         database.close();
     }
 }
