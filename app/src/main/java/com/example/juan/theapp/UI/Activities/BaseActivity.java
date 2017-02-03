@@ -160,6 +160,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         if (!(actualFragment instanceof ProfileFragment)) {
+            menuItem = ((NavigationView)findViewById(R.id.nav_view)).getMenu().findItem(R.id.profile);
             menuItem.setChecked(true);
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
@@ -173,7 +174,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void updateUser() {
-        Log.v("db", "Udating, points " + User.getCurrentUser().getPoints());
         database.updateUser(User.getCurrentUser());
     }
 

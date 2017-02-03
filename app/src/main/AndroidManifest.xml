@@ -21,6 +21,10 @@
             </intent-filter>
         </activity>
         <service android:name=".Services.MusicService"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="0af16eeb2bdc3a7d77a04eff2b74006d3a501670" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

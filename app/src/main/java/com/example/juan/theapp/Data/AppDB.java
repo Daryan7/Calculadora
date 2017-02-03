@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.juan.theapp.Domain.User;
 
@@ -37,14 +38,25 @@ public class AppDB extends SQLiteOpenHelper {
                 "('jugador6','-1'), ('jugador7','-1'), ('jugador8' , '-1')");
     }
 
-    public User getUserWithNick(String name) {
-        Cursor cursor = database.query(AppDB.TABLE_NAME, null, AppDB.Column.NICK + "=" + name, null, null, null, null);
+    public User getUserWithId(long id) {
+        Cursor cursor = database.query(AppDB.TABLE_NAME, null, Column.ID + "=" + id, null, null, null, null);
         User user = null;
         if (cursor.moveToFirst()) {
             user = cursorToUser(cursor);
         }
         cursor.close();
         return user;
+    }
+
+    public void registerUser(User user) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Column.ID, user.getId());
+        contentValues.put(Column.POINTS, user.getPoints());
+        Uri uri = user.getProfileImage();
+        contentValues.put(Column.IMAGE, uri == null ? null:uri.toString());
+        contentValues.put(Column.NICK, user.getNickName());
+        long id = database.insert(TABLE_NAME, null, contentValues);
+        if (id == -1) Log.e("Database", "Something happened!");
     }
 
     public void updateUser(User user) {

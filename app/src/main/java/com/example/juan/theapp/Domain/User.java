@@ -53,9 +53,13 @@ public class User {
         return currentUser;
     }
 
-    public static void logIn(Context context, String userName, String password) {
+    public static void logIn(Context context, String userName, long id) {
         AppDB appDB = new AppDB(context);
-        currentUser = appDB.getAllUsers().get(0);
+        currentUser = appDB.getUserWithId(id);
+        if (currentUser == null) {
+            currentUser = new User(id, userName, -1, null);
+            appDB.registerUser(currentUser);
+        }
         appDB.close();
     }
 }
