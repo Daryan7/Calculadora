@@ -9,11 +9,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.juan.theapp.Domain.User;
 import com.example.juan.theapp.R;
@@ -49,7 +51,7 @@ public class ProfileFragment extends Fragment {
 
         User user = User.getCurrentUser();
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int hasPermission = getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
             if (hasPermission != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
@@ -58,10 +60,16 @@ public class ProfileFragment extends Fragment {
 
         imageView = (ImageView) rootView.findViewById(R.id.profilePic);
         if (user.hasProfilePic()) {
-            if (android.os.Build.VERSION.SDK_INT >= 19) {
-                getActivity().getContentResolver().takePersistableUriPermission(user.getProfileImage(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            try {
+                if (Build.VERSION.SDK_INT >= 19) {
+                    getActivity().getContentResolver().takePersistableUriPermission(user.getProfileImage(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                }
+                Picasso.with(getContext()).load(user.getProfileImage()).resize(600, 600).centerCrop().into(imageView);
             }
-            Picasso.with(getContext()).load(user.getProfileImage()).resize(600, 600).centerCrop().into(imageView);
+            catch (SecurityException exception) {
+                user.setProfileImage(null);
+                Toast.makeText(getContext(), "Unfortunately, your profile image can't be displayed", Toast.LENGTH_LONG).show();
+            }
         }
 
         TextView userName = (TextView)rootView.findViewById(R.id.nickName);

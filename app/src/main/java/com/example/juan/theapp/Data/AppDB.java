@@ -80,21 +80,6 @@ public class AppDB extends SQLiteOpenHelper {
         return list;
     }
 
-    public List<User> getAllUsers() {
-        Cursor cursor = database.query(AppDB.TABLE_NAME, null, null, null, null, null, AppDB.Column.POINTS);
-
-        ArrayList<User> list = new ArrayList<>(cursor.getCount());
-
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            list.add(cursorToUser(cursor));
-            cursor.moveToNext();
-        }
-        cursor.close();
-
-        return list;
-    }
-
     private static User cursorToUser(Cursor cursor) {
         return new User(cursor.getLong(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3) == null ? null:Uri.parse(cursor.getString(3)));
     }
