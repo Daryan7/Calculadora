@@ -68,8 +68,13 @@ public class ProfileFragment extends Fragment {
         userName.setText(user.getNickName());
 
         TextView pointsView = (TextView)rootView.findViewById(R.id.points);
-        pointsView.setText(Integer.toString(user.getPoints()));
-
+        if (user.getPoints() >= 0) {
+            pointsView.setText(Integer.toString(user.getPoints()));
+        }
+        else {
+            pointsView.setText(R.string.has_not_played);
+            rootView.findViewById(R.id.movesWord).setVisibility(View.GONE);
+        }
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

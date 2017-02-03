@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -145,7 +146,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.logOut: {
                 Intent intent = new Intent(this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 if (actualFragment instanceof SongPlayerFragment) ((SongPlayerFragment)actualFragment).unBind();
                 Intent intent1 = new Intent(this, MusicService.class);
                 stopService(intent1);
@@ -172,6 +173,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void updateUser() {
+        Log.v("db", "Udating, points " + User.getCurrentUser().getPoints());
         database.updateUser(User.getCurrentUser());
     }
 

@@ -48,8 +48,7 @@ public class MemoryFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        }
-        else {
+        } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
@@ -60,7 +59,7 @@ public class MemoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_memory, container, false);
-        moveView = (TextView)rootView.findViewById(R.id.moves);
+        moveView = (TextView) rootView.findViewById(R.id.moves);
         flippedImage = 0;
         image1 = image2 = null;
         correctImages = 0;
@@ -77,13 +76,13 @@ public class MemoryFragment extends Fragment {
             randomArray.add(i % numFiles);
         }
 
-        idMap = new SparseIntArray(numFiles*2);
+        idMap = new SparseIntArray(numFiles * 2);
 
         final View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ImageView image = (ImageView) view;
-                if (!(boolean)image.getTag() && flippedImage < 2) {
+                if (!(boolean) image.getTag() && flippedImage < 2) {
                     if (image1 == null) image1 = image;
                     else image2 = image;
                     int id = idMap.get(view.getId());
@@ -96,8 +95,7 @@ public class MemoryFragment extends Fragment {
                             image1 = image2 = null;
                             ++correctImages;
                             if (correctImages == 8) onWin();
-                        }
-                        else {
+                        } else {
                             Handler handler = new Handler();
                             Runnable runnable = new Runnable() {
                                 @Override
@@ -142,7 +140,8 @@ public class MemoryFragment extends Fragment {
             case R.id.memory:
                 resetMemory();
                 return true;
-            default: return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -169,7 +168,7 @@ public class MemoryFragment extends Fragment {
             randomArray.add(i % numFiles);
         }
 
-        idMap = new SparseIntArray(numFiles*2);
+        idMap = new SparseIntArray(numFiles * 2);
 
         Random random = new Random(System.currentTimeMillis());
 
@@ -177,7 +176,7 @@ public class MemoryFragment extends Fragment {
             int randNum = random.nextInt(randomArray.size());
             idMap.put(anImageId, resId[randomArray.get(randNum)]);
             ImageView image = (ImageView) rootView.findViewById(anImageId);
-            if ((boolean)image.getTag()) {
+            if ((boolean) image.getTag()) {
                 image.setImageResource(R.drawable.star_trek_logo);
                 image.setTag(false);
             }
@@ -188,7 +187,7 @@ public class MemoryFragment extends Fragment {
     private void onWin() {
         String message = "Points: " + Integer.toString(moves);
         User user = User.getCurrentUser();
-        if (moves < user.getPoints()) {
+        if (moves < user.getPoints() || user.getPoints() < 0) {
             user.setPoints(moves);
             new Runnable() {
                 @Override

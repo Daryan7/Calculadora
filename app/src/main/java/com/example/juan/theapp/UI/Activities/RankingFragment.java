@@ -32,7 +32,7 @@ public class RankingFragment extends Fragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext());
         listView.setLayoutManager(linearLayoutManager);
-        RankingAdapter adapter = new RankingAdapter(dbHelper.getAllUsers());
+        RankingAdapter adapter = new RankingAdapter(dbHelper.getAllUsersWithPoints());
         dbHelper.close();
         listView.setAdapter(adapter);
         return rootView;

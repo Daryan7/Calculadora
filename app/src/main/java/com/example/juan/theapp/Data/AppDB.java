@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppDB extends SQLiteOpenHelper {
-    private static int BD_VERSION = 10;
+    private static int BD_VERSION = 12;
     private static String BD_NAME = "bd_project";
     private static String TABLE_NAME = "ranking";
     private SQLiteDatabase database;
@@ -33,8 +33,8 @@ public class AppDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME+" ("+Column.ID+" INTEGER PRIMARY KEY,"+Column.NICK+" TEXT UNIQUE,"+Column.POINTS+" INTEGER, "+Column.IMAGE+" TEXT)");
         sqLiteDatabase.execSQL("INSERT INTO "+ TABLE_NAME +" ("+Column.NICK+", "+Column.POINTS+") " +
-                "VALUES('jugador1','99'), ('jugador2', '99'), ('jugador3','99'), ('jugador4','99'), ('jugador5','99')," +
-                "('jugador6','99'), ('jugador7','99'), ('jugador8','99')");
+                "VALUES('jugador1','-1'), ('jugador2', '-1'), ('jugador3','-1'), ('jugador4','-1'), ('jugador5','-1')," +
+                "('jugador6','-1'), ('jugador7','-1'), ('jugador8' , '-1')");
     }
 
     public User getUserWithNick(String name) {
@@ -53,6 +53,21 @@ public class AppDB extends SQLiteOpenHelper {
         contentValues.put(Column.POINTS, user.getPoints());
 
         database.update(TABLE_NAME, contentValues, Column.ID+"="+user.getId(), null);
+    }
+
+    public List<User> getAllUsersWithPoints() {
+        Cursor cursor = database.query(AppDB.TABLE_NAME, null, Column.POINTS+">=0", null, null, null, AppDB.Column.POINTS);
+
+        ArrayList<User> list = new ArrayList<>(cursor.getCount());
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            list.add(cursorToUser(cursor));
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return list;
     }
 
     public List<User> getAllUsers() {

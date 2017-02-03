@@ -49,4 +49,6 @@
     <string name="memory_moves_indicator">Moves:</string>
 
     <string name="restart_memory">Restart</string>
+    <string name="reset_ranking_data">Reset ranking</string>
+    <string name="has_not_played">You haven\'t played yet</string>
 </resources>
