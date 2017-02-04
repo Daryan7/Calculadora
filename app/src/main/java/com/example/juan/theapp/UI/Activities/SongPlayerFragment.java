@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +17,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.juan.theapp.Domain.Exceptions.MediaPlayerException;
 import com.example.juan.theapp.R;
 import com.example.juan.theapp.Services.MusicService;
 
 import java.io.File;
-import java.io.IOException;
 
-public class SongPlayerFragment extends MyFragment implements MusicService.OnNextSongListener {
+public class SongPlayerFragment extends MyFragment implements MusicService.MusicServiceListener {
 
     private TextView songName;
     private SeekBar progressBar;
@@ -34,6 +33,8 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
     private boolean bound;
     private MusicService mService;
     private ImageView playStopButton;
+    private ImageView nextButton;
+    private ImageView previusButton;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -48,9 +49,8 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
                 try {
                     mService.prepare(sdCard);
                 }
-                catch (IOException e) {
-                    onError();
-                    e.printStackTrace();
+                catch (MediaPlayerException e) {
+                    onError(e);
                 }
             }
             else playStopButton.setImageResource(R.mipmap.ic_pause);
@@ -112,6 +112,8 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
         songName = (TextView) rootView.findViewById(R.id.songName);
         progressBar = (SeekBar) rootView.findViewById(R.id.songProgess);
         playStopButton = (ImageView) rootView.findViewById(R.id.playPause);
+        previusButton = (ImageView)rootView.findViewById(R.id.prevSong);
+        nextButton = (ImageView)rootView.findViewById(R.id.nextSon);
 
         playStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,10 +129,15 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
             }
         });
 
-        rootView.findViewById(R.id.nextSon).setOnClickListener(new View.OnClickListener() {
+       nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onNextSong(mService.nextSong());
+                try {
+                    mService.nextSong();
+                }
+                catch (MediaPlayerException e) {
+                    onError(e);
+                }
             }
         });
 
@@ -172,10 +179,6 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
 
     @Override
     public void onNextSong(File song) {
-        if (song == null) {
-            onError();
-            return;
-        }
         songName.setText(song.getName());
         timer.cancel();
         setTimer();
@@ -184,9 +187,46 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
         progressBar.setProgress(0);
     }
 
-    private void onError() {
+    @Override
+    public void onTracksFinished() {
+        try {
+            mService.resetAndPrepare();
+            progressBar.setMax(mediaPlayer.getDuration());
+            progressBar.setProgress(0);
+            timer.cancel();
+            setTimer();
+            songName.setText(mService.getPlayingSong().getName());
+        } catch (MediaPlayerException e) {
+            onError(e);
+        }
+    }
+
+    private void onError(MediaPlayerException exception) {
+        exception.printStackTrace();
         timer.cancel();
         progressBar.setProgress(0);
-        songName.setText("");
+        playStopButton.setImageResource(R.mipmap.ic_play);
+        switch (exception.getType()) {
+            case READ: {
+                Toast.makeText(getContext(), "Error while reading a song", Toast.LENGTH_LONG);
+                try {
+                    mService.resetAndPrepare();
+                    progressBar.setMax(mediaPlayer.getDuration());
+                    setTimer();
+                    return;
+                }
+                catch (MediaPlayerException ignored) {
+                }
+            }
+        }
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        };
+        playStopButton.setOnClickListener(listener);
+        nextButton.setOnClickListener(listener);
+        previusButton.setOnClickListener(listener);
     }
 }
