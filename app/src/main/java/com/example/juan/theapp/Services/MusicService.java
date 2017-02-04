@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 import com.example.juan.theapp.Domain.Exceptions.MediaPlayerException;
 import com.example.juan.theapp.R;
@@ -30,12 +31,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     public interface MusicServiceListener {
-        void onNextSong(File song);
+        void onNewSong(File song);
         void onTracksFinished();
     }
 
     public MusicService() {
-        currentSong = -1;
+        currentSong = 0;
         player = new MediaPlayer();
         player.setOnCompletionListener(this);
         songs = null;
@@ -53,12 +54,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
     public void prepare(File file) throws MediaPlayerException {
         songs = file.listFiles();
-        currentSong = 0;
+        currentSong = -1;
         findNextSong();
     }
 
     public void resetAndPrepare() throws MediaPlayerException {
-        currentSong = 0;
+        currentSong = -1;
         findNextSong();
     }
 
@@ -67,8 +68,27 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     private void findNextSong() throws MediaPlayerException {
-        while (currentSong < songs.length && songs[currentSong].isDirectory()) ++currentSong;
+        //noinspection StatementWithEmptyBody
+        while (++currentSong < songs.length && songs[currentSong].isDirectory());
         if (currentSong  < songs.length) {
+            player.reset();
+            try {
+                player.setDataSource(songs[currentSong].getAbsolutePath());
+                player.prepare();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                throw new MediaPlayerException(MediaPlayerException.ErrorType.READ);
+            }
+            return;
+        }
+        throw new MediaPlayerException(MediaPlayerException.ErrorType.NO_SONGS);
+    }
+
+    public void findPreviousSong() throws MediaPlayerException {
+        //noinspection StatementWithEmptyBody
+        while (--currentSong >= 0 && songs[currentSong].isDirectory());
+        if (currentSong >= 0) {
             player.reset();
             try {
                 player.setDataSource(songs[currentSong].getAbsolutePath());
@@ -122,18 +142,44 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public void onCompletion(MediaPlayer mp) {
         try {
+            Log.v("s", "next song");
             nextSong();
+            player.start();
         }
-        catch (MediaPlayerException e) {
-            e.printStackTrace();
+        catch (MediaPlayerException ignored) {
             stopSelf();
         }
     }
 
     public void nextSong() throws MediaPlayerException {
         boolean wasPlaying = player.isPlaying();
-        findNextSong();
+        try {
+            findNextSong();
+        }
+        catch (MediaPlayerException e) {
+            if (e.getType() == MediaPlayerException.ErrorType.NO_SONGS) {
+                listener.onTracksFinished();
+                return;
+            }
+            else throw e;
+        }
         if (wasPlaying) player.start();
-        listener.onNextSong(getPlayingSong());
+        listener.onNewSong(getPlayingSong());
+    }
+
+    public void previousSong() throws MediaPlayerException {
+        boolean wasPlaying = player.isPlaying();
+        try {
+            findPreviousSong();
+        }
+        catch (MediaPlayerException e) {
+            if (e.getType() == MediaPlayerException.ErrorType.READ) {
+                throw e;
+            }
+            currentSong = 0;
+            return;
+        }
+        if (wasPlaying) player.start();
+        listener.onNewSong(getPlayingSong());
     }
 }

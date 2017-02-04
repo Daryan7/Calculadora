@@ -35,6 +35,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
     private ImageView playStopButton;
     private ImageView nextButton;
     private ImageView previusButton;
+    private boolean auxBoolean;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -65,14 +66,20 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-                    if (mediaPlayer.isPlaying()) pauseSong();
+                    if (mediaPlayer.isPlaying()) {
+                        pauseSong();
+                        auxBoolean = true;
+                    }
+                    else auxBoolean = false;
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     mediaPlayer.seekTo(seekBar.getProgress());
-                    setTimer();
-                    startSong();
+                    if (auxBoolean) {
+                        setTimer();
+                        startSong();
+                    }
                 }
             });
         }
@@ -141,6 +148,18 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
             }
         });
 
+        previusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    mService.previousSong();
+                }
+                catch (MediaPlayerException e) {
+                    onError(e);
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -178,11 +197,11 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
     }
 
     @Override
-    public void onNextSong(File song) {
+    public void onNewSong(File song) {
         songName.setText(song.getName());
         timer.cancel();
         setTimer();
-        timer.start();
+        if (mediaPlayer.isPlaying()) timer.start();
         progressBar.setMax(mediaPlayer.getDuration());
         progressBar.setProgress(0);
     }
@@ -196,6 +215,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
             timer.cancel();
             setTimer();
             songName.setText(mService.getPlayingSong().getName());
+            playStopButton.setImageResource(R.mipmap.ic_play);
         } catch (MediaPlayerException e) {
             onError(e);
         }
