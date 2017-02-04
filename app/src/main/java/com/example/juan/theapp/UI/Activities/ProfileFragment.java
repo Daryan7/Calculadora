@@ -37,9 +37,6 @@ import java.util.List;
 
 public class ProfileFragment extends MyFragment {
 
-    private static final int REQUEST_READ = 0;
-    private static final int REQUEST_GPS = 1;
-
     private ImageView imageView;
     private View rootView;
 
