@@ -67,16 +67,18 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         this.listener = listener;
     }
 
-    public void nextSong() {
+    public File nextSong() {
+        File song = null;
         //noinspection StatementWithEmptyBody
         while (++currentSong < songs.length && songs[currentSong].isDirectory());
         if (currentSong < songs.length) {
+            song = songs[currentSong];
             player.reset();
             try {
-                player.setDataSource(songs[currentSong].getAbsolutePath());
+                player.setDataSource(song.getAbsolutePath());
                 player.prepare();
                 player.start();
-                return;
+                return song;
             }
             catch (IOException e) {
                 Toast.makeText(getApplicationContext(), "Can't play next song, sorry!", Toast.LENGTH_LONG).show();
@@ -84,12 +86,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             }
         }
         stopSelf();
+        return song;
     }
 
     @Override
     public void onDestroy() {
         player.release();
-        Log.v("ma", "me destruyo");
     }
 
     @Nullable
@@ -114,7 +116,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         0,
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
-
         mBuilder.setContentIntent(resultPendingIntent);
 
         startForeground(1, mBuilder.build());
@@ -126,9 +127,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        nextSong();
-        if (currentSong < songs.length) {
-            listener.onNextSong(songs[currentSong]);
-        }
+        listener.onNextSong(nextSong());
     }
 }

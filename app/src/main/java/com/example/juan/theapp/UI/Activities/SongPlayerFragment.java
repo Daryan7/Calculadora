@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.juan.theapp.R;
 import com.example.juan.theapp.Services.MusicService;
@@ -32,6 +33,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
     private final static int refreshTime = 300;
     private boolean bound;
     private MusicService mService;
+    private ImageView playStopButton;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -45,10 +47,13 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
                 File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
                 try {
                     mService.prepare(sdCard);
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
+                    onError();
                     e.printStackTrace();
                 }
             }
+            else playStopButton.setImageResource(R.mipmap.ic_pause);
             songName.setText(mService.getPlayingSong().getName());
             setTimer();
             if (mediaPlayer.isPlaying()) timer.start();
@@ -106,7 +111,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
 
         songName = (TextView) rootView.findViewById(R.id.songName);
         progressBar = (SeekBar) rootView.findViewById(R.id.songProgess);
-        View playStopButton = rootView.findViewById(R.id.playPause);
+        playStopButton = (ImageView) rootView.findViewById(R.id.playPause);
 
         playStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +127,12 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
             }
         });
 
-
+        rootView.findViewById(R.id.nextSon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onNextSong(mService.nextSong());
+            }
+        });
 
         return rootView;
     }
@@ -162,10 +172,21 @@ public class SongPlayerFragment extends MyFragment implements MusicService.OnNex
 
     @Override
     public void onNextSong(File song) {
+        if (song == null) {
+            onError();
+            return;
+        }
+        songName.setText(song.getName());
         timer.cancel();
         setTimer();
         timer.start();
         progressBar.setMax(mediaPlayer.getDuration());
         progressBar.setProgress(0);
+    }
+
+    private void onError() {
+        timer.cancel();
+        progressBar.setProgress(0);
+        songName.setText("");
     }
 }
