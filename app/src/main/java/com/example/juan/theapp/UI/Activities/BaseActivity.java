@@ -195,11 +195,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean checkPermissions(String permission, int requestCode) {
+    public boolean checkPermissions(String permission) {
+        Log.v("s", "Requesting " + permission);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int hasPermission = checkSelfPermission(permission);
             if (hasPermission != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{permission}, requestCode);
                 return false;
             }
         }

@@ -30,13 +30,15 @@ import com.example.juan.theapp.UI.Comunication.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.security.Permission;
+import java.security.Permissions;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileFragment extends MyFragment {
 
     private static final int REQUEST_READ = 0;
     private static final int REQUEST_GPS = 1;
-    private static final int RESULT_PROFILE_PIC = 0;
 
     private ImageView imageView;
     private View rootView;
@@ -46,37 +48,15 @@ public class ProfileFragment extends MyFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == RESULT_PROFILE_PIC) {
-                Uri selectedImageUri = data.getData();
-                setProfilePic(selectedImageUri);
-                User.getCurrentUser().setProfileImage(selectedImageUri);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mListener.updateUser();
-                    }
-                }).start();
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            switch (requestCode) {
-                case REQUEST_GPS: {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setGPSLocation();
-                        }
-                    }).start();
-                    break;
+            Uri selectedImageUri = data.getData();
+            setProfilePic(selectedImageUri);
+            User.getCurrentUser().setProfileImage(selectedImageUri);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.updateUser();
                 }
-                case REQUEST_READ: {
-                    setProfilePic(User.getCurrentUser().getProfileImage());
-                }
-            }
+            }).start();
         }
     }
 
@@ -133,7 +113,7 @@ public class ProfileFragment extends MyFragment {
     }
 
     private void setProfilePic(Uri picUri) {
-        Picasso.with(getContext()).load(picUri).centerCrop().into(imageView);
+        Picasso.with(getContext()).load(picUri).resize(600, 600).centerCrop().into(imageView);
     }
 
     @Override
@@ -142,15 +122,15 @@ public class ProfileFragment extends MyFragment {
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         User user = User.getCurrentUser();
+        boolean hasReadPermission = mListener.checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE);
 
         imageView = (ImageView) rootView.findViewById(R.id.profilePic);
         if (user.hasProfilePic()) {
             try {
-                boolean permission = mListener.checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, REQUEST_READ);
                 if (Build.VERSION.SDK_INT >= 19) {
                     getActivity().getContentResolver().takePersistableUriPermission(user.getProfileImage(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
-                if (permission) {
+                if (hasReadPermission) {
                     setProfilePic(user.getProfileImage());
                 }
             } catch (SecurityException exception) {
@@ -159,7 +139,7 @@ public class ProfileFragment extends MyFragment {
             }
         }
 
-        if (mListener.checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_GPS)) {
+        if (mListener.checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION)) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -179,19 +159,21 @@ public class ProfileFragment extends MyFragment {
             pointsView.setText(R.string.has_not_played);
             rootView.findViewById(R.id.movesWord).setVisibility(View.GONE);
         }
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent;
-                if (Build.VERSION.SDK_INT >= 19) {
-                    intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        if (hasReadPermission) {
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent;
+                    if (Build.VERSION.SDK_INT >= 19) {
+                        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    }
+                    else intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, 0);
                 }
-                else intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("image/*");
-                startActivityForResult(intent, RESULT_PROFILE_PIC);
-            }
-        });
+            });
+        }
 
         return rootView;
     }

@@ -1,7 +1,10 @@
 package com.example.juan.theapp.UI.Activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -40,6 +43,20 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), BaseActivity.class);
             startActivity(intent);
             return;
+        }
+
+        String[] permissions = {"", ""};
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int hasPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (hasPermission != PackageManager.PERMISSION_GRANTED) {
+                permissions[0] = Manifest.permission.READ_EXTERNAL_STORAGE;
+            }
+            hasPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (hasPermission != PackageManager.PERMISSION_GRANTED) {
+                permissions[1] = Manifest.permission.ACCESS_FINE_LOCATION;
+            }
+            requestPermissions(permissions, 0);
         }
 
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
