@@ -49,12 +49,10 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
                 File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
                 try {
                     mService.prepare(sdCard);
-                }
-                catch (MediaPlayerException e) {
+                } catch (MediaPlayerException e) {
                     onError(e);
                 }
-            }
-            else playStopButton.setImageResource(R.mipmap.ic_pause);
+            } else playStopButton.setImageResource(R.mipmap.ic_pause);
             songName.setText(mService.getPlayingSong().getName());
             setTimer();
             if (mediaPlayer.isPlaying()) timer.start();
@@ -69,8 +67,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
                     if (mediaPlayer.isPlaying()) {
                         pauseSong();
                         auxBoolean = true;
-                    }
-                    else auxBoolean = false;
+                    } else auxBoolean = false;
                 }
 
                 @Override
@@ -91,10 +88,11 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
     };
 
     private void setTimer() {
-        timer = new CountDownTimer(mediaPlayer.getDuration()-mediaPlayer.getCurrentPosition(), refreshTime) {
+        timer = new CountDownTimer(mediaPlayer.getDuration() - mediaPlayer.getCurrentPosition(), refreshTime) {
             public void onTick(long millisUntilFinished) {
                 progressBar.setProgress(mediaPlayer.getCurrentPosition());
             }
+
             @Override
             public void onFinish() {
             }
@@ -119,30 +117,28 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
         songName = (TextView) rootView.findViewById(R.id.songName);
         progressBar = (SeekBar) rootView.findViewById(R.id.songProgess);
         playStopButton = (ImageView) rootView.findViewById(R.id.playPause);
-        previusButton = (ImageView)rootView.findViewById(R.id.prevSong);
-        nextButton = (ImageView)rootView.findViewById(R.id.nextSon);
+        previusButton = (ImageView) rootView.findViewById(R.id.prevSong);
+        nextButton = (ImageView) rootView.findViewById(R.id.nextSon);
 
         playStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mediaPlayer.isPlaying()) {
                     pauseSong();
-                    ((ImageView)v).setImageResource(R.mipmap.ic_play);
-                }
-                else {
+                    ((ImageView) v).setImageResource(R.mipmap.ic_play);
+                } else {
                     startSong();
-                    ((ImageView)v).setImageResource(R.mipmap.ic_pause);
+                    ((ImageView) v).setImageResource(R.mipmap.ic_pause);
                 }
             }
         });
 
-       nextButton.setOnClickListener(new View.OnClickListener() {
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     mService.nextSong();
-                }
-                catch (MediaPlayerException e) {
+                } catch (MediaPlayerException e) {
                     onError(e);
                 }
             }
@@ -153,8 +149,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
             public void onClick(View view) {
                 try {
                     mService.previousSong();
-                }
-                catch (MediaPlayerException e) {
+                } catch (MediaPlayerException e) {
                     onError(e);
                 }
             }
@@ -187,8 +182,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
             if (mediaPlayer.isPlaying()) {
                 mService.startForeground();
                 getActivity().startService(intent);
-            }
-            else {
+            } else {
                 getActivity().stopService(intent);
             }
             getActivity().unbindService(mConnection);
@@ -227,17 +221,19 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
         progressBar.setProgress(0);
         playStopButton.setImageResource(R.mipmap.ic_play);
         switch (exception.getType()) {
-            case READ: {
-                Toast.makeText(getContext(), "Error while reading a song", Toast.LENGTH_LONG);
+            case READ:
+                Toast.makeText(getContext(), "Error while reading a song", Toast.LENGTH_LONG).show();
                 try {
                     mService.resetAndPrepare();
                     progressBar.setMax(mediaPlayer.getDuration());
                     setTimer();
                     return;
+                } catch (MediaPlayerException ignored) {
                 }
-                catch (MediaPlayerException ignored) {
-                }
-            }
+                break;
+            case NO_SONGS:
+                Toast.makeText(getContext(), "No songs found!", Toast.LENGTH_LONG).show();
+                break;
         }
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
