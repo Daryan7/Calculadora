@@ -40,6 +40,8 @@
 
     <string name="profile_points">Memory game record:</string>
     <string name="profile_moves">Moves</string>
+    <string name="profile_position">Your current position:</string>
+    <string name="default_current_position">Unknown</string>
 
     <string name="welcome_title">Welcome to The App</string>
     <string name="username_hint">User name</string>

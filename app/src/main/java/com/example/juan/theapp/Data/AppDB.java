@@ -34,7 +34,7 @@ public class AppDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME+" ("+Column.ID+" INTEGER PRIMARY KEY,"+Column.NICK+" TEXT UNIQUE,"+Column.POINTS+" INTEGER, "+Column.IMAGE+" TEXT)");
         sqLiteDatabase.execSQL("INSERT INTO "+ TABLE_NAME +" ("+Column.ID+", "+Column.NICK+", "+Column.POINTS+") " +
-                "VALUES('-1','Guest','-1')");
+                "VALUES('0','Guest','-1')");
     }
 
     public User getUserWithId(long id) {
