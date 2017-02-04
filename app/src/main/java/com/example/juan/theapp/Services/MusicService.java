@@ -143,10 +143,15 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     public void onCompletion(MediaPlayer mp) {
         try {
             Log.v("s", "next song");
-            nextSong();
+            findNextSong();
             player.start();
+            listener.onNewSong(getPlayingSong());
         }
-        catch (MediaPlayerException ignored) {
+        catch (MediaPlayerException e) {
+            if (e.getType() == MediaPlayerException.ErrorType.NO_SONGS) {
+                listener.onTracksFinished();
+            }
+            else e.printStackTrace();
             stopSelf();
         }
     }
