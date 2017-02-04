@@ -42,21 +42,20 @@ public class MemoryFragment extends MyFragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setHasOptionsMenu(true);
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    public void onStart() {
+        super.onStart();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

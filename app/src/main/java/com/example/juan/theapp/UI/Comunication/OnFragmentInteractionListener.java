@@ -5,5 +5,5 @@ import com.example.juan.theapp.Data.AppDB;
 public interface OnFragmentInteractionListener {
     void updateUser();
     AppDB getDataBase();
-    boolean checkPermissions(String permission);
+    boolean checkPermissions(String permission, int requestCode);
 }
