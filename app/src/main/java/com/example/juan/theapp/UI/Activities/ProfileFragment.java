@@ -32,10 +32,9 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.List;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends MyFragment {
 
     private ImageView imageView;
-    private OnFragmentInteractionListener mListener;
     private View rootView;
 
     private List<Address> addressList;
@@ -47,12 +46,12 @@ public class ProfileFragment extends Fragment {
                 Uri selectedImageUri = data.getData();
                 Picasso.with(getContext()).load(selectedImageUri).resize(600, 600).centerCrop().into(imageView);
                 User.getCurrentUser().setProfileImage(selectedImageUri);
-                new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         mListener.updateUser();
                     }
-                }.run();
+                }).start();
             }
         }
     }
@@ -91,7 +90,6 @@ public class ProfileFragment extends Fragment {
                 t.setText(finalAddressString);
             }
         });
-        Log.v("LOG", ((Double) location.getLatitude()).toString());
     }
 
     public void setGPSLocation() {
@@ -106,15 +104,12 @@ public class ProfileFragment extends Fragment {
                 public void onStatusChanged(String provider, int status,
                                             Bundle extras) {
                 }
-
                 @Override
                 public void onProviderEnabled(String provider) {
                 }
-
                 @Override
                 public void onProviderDisabled(String provider) {
                 }
-
                 @Override
                 public void onLocationChanged(Location location) {
                     printLocation(location);
@@ -137,6 +132,7 @@ public class ProfileFragment extends Fragment {
                 if (Build.VERSION.SDK_INT >= 19) {
                     getActivity().getContentResolver().takePersistableUriPermission(user.getProfileImage(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
+                //mListener.checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE);
                 Picasso.with(getContext()).load(user.getProfileImage()).resize(600, 600).centerCrop().into(imageView);
             } catch (SecurityException exception) {
                 user.setProfileImage(null);
@@ -155,10 +151,10 @@ public class ProfileFragment extends Fragment {
             int hasPermission = getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             if (hasPermission != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            } else {
-                thread.start();
             }
-        } else thread.start();
+            else thread.start();
+        }
+        else thread.start();
 
         TextView userName = (TextView) rootView.findViewById(R.id.nickName);
         userName.setText(user.getNickName());
@@ -166,7 +162,8 @@ public class ProfileFragment extends Fragment {
         TextView pointsView = (TextView) rootView.findViewById(R.id.points);
         if (user.getPoints() >= 0) {
             pointsView.setText(Integer.toString(user.getPoints()));
-        } else {
+        }
+        else {
             pointsView.setText(R.string.has_not_played);
             rootView.findViewById(R.id.movesWord).setVisibility(View.GONE);
         }
@@ -184,16 +181,5 @@ public class ProfileFragment extends Fragment {
         });
 
         return rootView;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 }

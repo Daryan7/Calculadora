@@ -1,7 +1,10 @@
 package com.example.juan.theapp.UI.Activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -12,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.juan.theapp.Data.AppDB;
@@ -30,6 +34,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     public void onCreate(Bundle savedInstaceState) {
         super.onCreate(savedInstaceState);
         setContentView(R.layout.activity_base);
+
+        Log.v("d", "creando");
 
         database = new AppDB(this);
 
@@ -160,6 +166,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public void onNewIntent(Intent intent) {
+        Log.v("d", "New intent");
+    }
+
+    @Override
     public void onBackPressed() {
         if (!(actualFragment instanceof ProfileFragment)) {
             menuItem = ((NavigationView) findViewById(R.id.nav_view)).getMenu().findItem(R.id.profile);
@@ -181,6 +192,18 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public AppDB getDataBase() {
         return database;
+    }
+
+    @Override
+    public boolean checkPermissions(String permission) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int hasPermission = checkSelfPermission(permission);
+            if (hasPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{permission}, 0);
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

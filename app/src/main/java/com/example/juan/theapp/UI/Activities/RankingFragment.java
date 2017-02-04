@@ -17,9 +17,8 @@ import com.example.juan.theapp.R;
 import com.example.juan.theapp.Domain.Adapters.RankingAdapter;
 import com.example.juan.theapp.UI.Comunication.OnFragmentInteractionListener;
 
-public class RankingFragment extends Fragment {
+public class RankingFragment extends MyFragment {
 
-    private OnFragmentInteractionListener mListener;
     private RankingAdapter adapter;
 
     @Override
@@ -59,18 +58,6 @@ public class RankingFragment extends Fragment {
                 adapter.removeAllData();
                 return true;
             default: return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        }
-        else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
         }
     }
 }

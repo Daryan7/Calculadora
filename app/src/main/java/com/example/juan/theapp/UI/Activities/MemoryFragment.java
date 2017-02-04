@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,11 +24,10 @@ import com.example.juan.theapp.R;
 import com.example.juan.theapp.UI.Comunication.OnFragmentInteractionListener;
 import com.example.juan.theapp.UI.CoolImageFlipper;
 
-
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MemoryFragment extends Fragment {
+public class MemoryFragment extends MyFragment {
 
     private SparseIntArray idMap;
     private int flippedImage;
@@ -40,7 +38,6 @@ public class MemoryFragment extends Fragment {
     private View rootView;
     private ImageView image1, image2;
     private TextView moveView;
-    private OnFragmentInteractionListener mListener;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -206,12 +203,12 @@ public class MemoryFragment extends Fragment {
         User user = User.getCurrentUser();
         if (moves < user.getPoints() || user.getPoints() < 0) {
             user.setPoints(moves);
-            new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mListener.updateUser();
                 }
-            }.run();
+            }).start();
             message += "\nNew Record!";
         }
         new AlertDialog.Builder(getContext())

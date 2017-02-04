@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +22,7 @@ import com.example.juan.theapp.UI.Listeners.FuncButtonListener;
 import com.example.juan.theapp.UI.Listeners.NumButtonListener;
 import com.example.juan.theapp.UI.Listeners.OperandButtonListener;
 
-public class CalculatorFragment extends Fragment {
+public class CalculatorFragment extends MyFragment {
     private TextView inputField;
     private TextView outputField;
     private String actualString;

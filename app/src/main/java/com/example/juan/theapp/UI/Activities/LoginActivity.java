@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.juan.theapp.Domain.User;
 import com.example.juan.theapp.R;
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             return;
         }
+
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
@@ -54,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 User.registerIfNotExist(getApplicationContext(), session.getUserName(), session.getUserId());
                 Intent intent = new Intent(getApplicationContext(), BaseActivity.class);
                 startActivity(intent);
+                finish();
             }
             @Override
             public void failure(TwitterException exception) {
@@ -74,7 +77,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // Make sure that the loginButton hears the result from any
+        // Activity that it triggered.
         loginButton.onActivityResult(requestCode, resultCode, data);
     }
+
 
 }

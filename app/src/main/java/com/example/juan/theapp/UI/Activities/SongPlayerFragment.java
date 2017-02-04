@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +29,7 @@ import com.example.juan.theapp.Services.MusicService;
 import java.io.File;
 import java.io.IOException;
 
-public class SongPlayerFragment extends Fragment {
+public class SongPlayerFragment extends MyFragment {
 
     private TextView songName;
     private SeekBar progressBar;
@@ -38,6 +39,7 @@ public class SongPlayerFragment extends Fragment {
     private boolean bound;
     private MusicService mService;
 
+    @Nullable
     private File firstFileFound(File parent) {
         if (parent.isFile()) return parent;
 
@@ -136,12 +138,7 @@ public class SongPlayerFragment extends Fragment {
             }
         });
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int hasPermission = getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-            if (hasPermission != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
-            }
-        }
+
 
         return rootView;
     }

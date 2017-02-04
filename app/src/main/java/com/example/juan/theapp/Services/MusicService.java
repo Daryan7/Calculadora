@@ -39,6 +39,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
     public void prepare(File file) throws IOException {
         song = file;
+        player.reset();
         player.setDataSource(file.getAbsolutePath());
         player.prepare();
     }
@@ -63,7 +64,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
         Intent resultIntent = new Intent(this, BaseActivity.class);
         resultIntent.putExtra("musicPlayer", true);
-        resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(BaseActivity.class);
         stackBuilder.addNextIntent(resultIntent);
