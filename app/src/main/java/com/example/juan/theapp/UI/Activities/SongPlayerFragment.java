@@ -1,5 +1,6 @@
 package com.example.juan.theapp.UI.Activities;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +37,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
     private ImageView playStopButton;
     private ImageView nextButton;
     private ImageView previusButton;
-    private boolean auxBoolean;
+    private boolean wasPlaying;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -46,13 +48,19 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
             bound = true;
             mediaPlayer = mService.getMediaPlayer();
             if (!mediaPlayer.isPlaying()) {
+                if (!mListener.checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    onError(new MediaPlayerException(MediaPlayerException.ErrorType.NO_PERMISSION));
+                    return;
+                }
                 File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
                 try {
                     mService.prepare(sdCard);
-                } catch (MediaPlayerException e) {
+                }
+                catch (MediaPlayerException e) {
                     onError(e);
                 }
-            } else playStopButton.setImageResource(R.mipmap.ic_pause);
+            }
+            else playStopButton.setImageResource(R.mipmap.ic_pause);
             songName.setText(mService.getPlayingSong().getName());
             setTimer();
             if (mediaPlayer.isPlaying()) timer.start();
@@ -66,14 +74,15 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
                 public void onStartTrackingTouch(SeekBar seekBar) {
                     if (mediaPlayer.isPlaying()) {
                         pauseSong();
-                        auxBoolean = true;
-                    } else auxBoolean = false;
+                        wasPlaying = true;
+                    }
+                    else wasPlaying = false;
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     mediaPlayer.seekTo(seekBar.getProgress());
-                    if (auxBoolean) {
+                    if (wasPlaying) {
                         setTimer();
                         startSong();
                     }
@@ -161,7 +170,6 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
     @Override
     public void onStart() {
         super.onStart();
-
         Intent intent = new Intent(getContext(), MusicService.class);
         getActivity().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
@@ -177,14 +185,16 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
     public void onStop() {
         super.onStop();
         if (bound) {
-            timer.cancel();
+            if (timer != null) timer.cancel();
             Intent intent = new Intent(getContext(), MusicService.class);
             if (mediaPlayer.isPlaying()) {
                 mService.startForeground();
                 getActivity().startService(intent);
-            } else {
+            }
+            else {
                 getActivity().stopService(intent);
             }
+            mService.removeListener();
             getActivity().unbindService(mConnection);
             bound = false;
         }
@@ -210,19 +220,20 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
             setTimer();
             songName.setText(mService.getPlayingSong().getName());
             playStopButton.setImageResource(R.mipmap.ic_play);
-        } catch (MediaPlayerException e) {
+        }
+        catch (MediaPlayerException e) {
             onError(e);
         }
     }
 
     private void onError(MediaPlayerException exception) {
-        exception.printStackTrace();
-        timer.cancel();
+        if (timer != null) timer.cancel();
         progressBar.setProgress(0);
         playStopButton.setImageResource(R.mipmap.ic_play);
         switch (exception.getType()) {
             case READ:
-                Toast.makeText(getContext(), "Error while reading a song", Toast.LENGTH_LONG).show();
+                exception.printStackTrace();
+                Toast.makeText(getContext(), "Error while loading a song", Toast.LENGTH_LONG).show();
                 try {
                     mService.resetAndPrepare();
                     progressBar.setMax(mediaPlayer.getDuration());
@@ -233,6 +244,9 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
                 break;
             case NO_SONGS:
                 Toast.makeText(getContext(), "No songs found!", Toast.LENGTH_LONG).show();
+                break;
+            case NO_PERMISSION:
+                Toast.makeText(getContext(), "Access song permission denied!", Toast.LENGTH_LONG).show();
                 break;
         }
         View.OnClickListener listener = new View.OnClickListener() {

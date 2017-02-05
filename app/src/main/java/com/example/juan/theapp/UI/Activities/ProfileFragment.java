@@ -41,6 +41,8 @@ public class ProfileFragment extends MyFragment {
     private View rootView;
 
     private List<Address> addressList;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -81,12 +83,20 @@ public class ProfileFragment extends MyFragment {
     }
 
     public void setGPSLocation() {
-        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        final Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {
-            printLocation(location);
-        } else {
-            LocationListener lis = new LocationListener() {
+            Log.v("2", "Found last location");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    printLocation(location);
+                }
+            }).start();
+        }
+        else {
+            Log.v("3", "Not found location");
+            locationListener = new LocationListener() {
                 @Override
                 public void onStatusChanged(String provider, int status,
                                             Bundle extras) {
@@ -101,11 +111,16 @@ public class ProfileFragment extends MyFragment {
                 }
 
                 @Override
-                public void onLocationChanged(Location location) {
-                    printLocation(location);
+                public void onLocationChanged(final Location location) {
+                    locationManager.removeUpdates(this);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {printLocation(location);
+                        }
+                    }).start();
                 }
             };
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, lis);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
     }
 
@@ -122,27 +137,21 @@ public class ProfileFragment extends MyFragment {
         boolean hasReadPermission = mListener.checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE);
 
         imageView = (ImageView) rootView.findViewById(R.id.profilePic);
-        if (user.hasProfilePic()) {
+        if (user.hasProfilePic() && hasReadPermission) {
             try {
                 if (Build.VERSION.SDK_INT >= 19) {
                     getActivity().getContentResolver().takePersistableUriPermission(user.getProfileImage(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
-                if (hasReadPermission) {
-                    setProfilePic(user.getProfileImage());
-                }
-            } catch (SecurityException exception) {
+                setProfilePic(user.getProfileImage());
+            }
+            catch (SecurityException exception) {
                 user.setProfileImage(null);
                 Toast.makeText(getContext(), "Unfortunately, your profile picture can't be displayed", Toast.LENGTH_LONG).show();
             }
         }
 
         if (mListener.checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    setGPSLocation();
-                }
-            }).start();
+            setGPSLocation();
         }
 
         TextView userName = (TextView) rootView.findViewById(R.id.nickName);
@@ -171,7 +180,14 @@ public class ProfileFragment extends MyFragment {
                 }
             });
         }
-
         return rootView;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mListener.checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION) && locationListener != null) {
+            locationManager.removeUpdates(locationListener);
+        }
     }
 }

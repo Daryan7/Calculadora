@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.juan.theapp.Domain.Exceptions.MediaPlayerException;
 import com.example.juan.theapp.R;
@@ -139,20 +140,26 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         return player;
     }
 
+    public void removeListener() {
+        listener = null;
+    }
+
     @Override
     public void onCompletion(MediaPlayer mp) {
         try {
             Log.v("s", "next song");
             findNextSong();
             player.start();
-            listener.onNewSong(getPlayingSong());
+            if (listener != null) listener.onNewSong(getPlayingSong());
         }
         catch (MediaPlayerException e) {
-            if (e.getType() == MediaPlayerException.ErrorType.NO_SONGS) {
-                listener.onTracksFinished();
+            if (listener != null) {
+                if (e.getType() == MediaPlayerException.ErrorType.NO_SONGS) {
+                    listener.onTracksFinished();
+                }
+                else Toast.makeText(getApplicationContext(), "Can't play next song", Toast.LENGTH_LONG).show();
             }
-            else e.printStackTrace();
-            stopSelf();
+            else stopSelf();
         }
     }
 
@@ -166,7 +173,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 listener.onTracksFinished();
                 return;
             }
-            else throw e;
+            throw e;
         }
         if (wasPlaying) player.start();
         listener.onNewSong(getPlayingSong());
