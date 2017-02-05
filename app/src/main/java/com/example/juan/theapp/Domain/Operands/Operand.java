@@ -6,10 +6,10 @@ import com.example.juan.theapp.Domain.Exceptions.WrongExpression;
 public abstract class Operand extends Token {
     int priority;
 
-    public abstract double operate(double left, double right);
+    public abstract double operate(double left, double right) throws WrongExpression;
 
     @Override
-    public void execute(Stack<Double> numStack, Stack<Token> componentStack) {
+    public void execute(Stack<Double> numStack, Stack<Token> componentStack) throws WrongExpression {
         while (!(componentStack.isEmpty())) {
             Token token = componentStack.getTop();
             if (token instanceof OpenParenthesis) {

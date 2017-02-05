@@ -1,6 +1,5 @@
 package com.example.juan.theapp.UI.Activities;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -166,11 +165,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onNewIntent(Intent intent) {
-        Log.v("d", "New intent");
-    }
-
-    @Override
     public void onBackPressed() {
         if (!(actualFragment instanceof ProfileFragment)) {
             menuItem = ((NavigationView) findViewById(R.id.nav_view)).getMenu().findItem(R.id.profile);
@@ -181,7 +175,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             actualFragment = new ProfileFragment();
             fragmentTransaction.replace(R.id.frame_layout_base, actualFragment);
             fragmentTransaction.commit();
-        } else super.onBackPressed();
+        }
+        else super.onBackPressed();
     }
 
     @Override
@@ -196,7 +191,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean checkPermissions(String permission) {
-        Log.v("s", "Requesting " + permission);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int hasPermission = checkSelfPermission(permission);
             if (hasPermission != PackageManager.PERMISSION_GRANTED) {

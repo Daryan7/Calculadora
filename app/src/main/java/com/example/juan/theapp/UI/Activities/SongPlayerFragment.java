@@ -177,6 +177,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
     void unBind() {
         timer.cancel();
         mediaPlayer.release();
+        mService.removeListener();
         getActivity().unbindService(mConnection);
         bound = false;
     }

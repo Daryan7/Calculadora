@@ -30,7 +30,7 @@ public class Subs extends Operand {
     }
 
     @Override
-    public void execute(Stack<Double> numStack, Stack<Token> componentStack) {
+    public void execute(Stack<Double> numStack, Stack<Token> componentStack) throws WrongExpression {
         if (_hasNumberAtLeftSide) super.execute(numStack, componentStack);
     }
 

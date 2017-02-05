@@ -51,7 +51,7 @@ public class Calculator {
         calculatorFragment.clearField();
     }
 
-    private void executeStacks(Stack<Double> numStack, Stack<Token> operandStack) {
+    private void executeStacks(Stack<Double> numStack, Stack<Token> operandStack) throws WrongExpression {
         while (!operandStack.isEmpty()) {
             double rightNumber = numStack.getPop();
             double leftNumber = numStack.getPop();
@@ -77,14 +77,27 @@ public class Calculator {
                 lastToken = token;
             }
             lastToken.endToken();
-            if (!OpenParenthesis.goodParenthesis()) throw new WrongExpression("Parenthesis not well placed");
+            if (!OpenParenthesis.goodParenthesis()) throw new WrongExpression(WrongExpression.ErrorType.PARENTHESIS);
             executeStacks(numStack, operandStack);
             lastResult = numStack.getPop();
             calculatorFragment.setResult(Double.toString(lastResult));
             calculatorFragment.resetNextInput();
         }
         catch (WrongExpression exception) {
-            calculatorFragment.onError();
+            String message = "";
+            switch (exception.getType()) {
+                case DIVISION_BY_ZERO:
+                    message = "Can't divide by zero";
+                    calculatorFragment.setResult("This is not the operation you are looking for");
+                    break;
+                case SYNTAX:
+                    message = "The expression has syntax errors";
+                    break;
+                case PARENTHESIS:
+                    message = "Parenthesis are not correct";
+                    break;
+            }
+            calculatorFragment.onError(message);
         }
     }
 

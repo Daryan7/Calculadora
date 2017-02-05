@@ -147,7 +147,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public void onCompletion(MediaPlayer mp) {
         try {
-            Log.v("s", "next song");
             findNextSong();
             player.start();
             if (listener != null) listener.onNewSong(getPlayingSong());
@@ -157,7 +156,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 if (e.getType() == MediaPlayerException.ErrorType.NO_SONGS) {
                     listener.onTracksFinished();
                 }
-                else Toast.makeText(getApplicationContext(), "Can't play next song", Toast.LENGTH_LONG).show();
+                else Toast.makeText(getApplicationContext(), "Error while loading a song", Toast.LENGTH_LONG).show();
             }
             else stopSelf();
         }

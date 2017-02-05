@@ -177,7 +177,7 @@ public class CalculatorFragment extends MyFragment {
         outputField.setText("");
     }
 
-    public void onError() {
+    public void onError(String message) {
         if (toast) {
             Toast.makeText(getContext(), getActivity().getResources().getString(R.string.toast_notification_text), Toast.LENGTH_SHORT).show();
         }
@@ -189,7 +189,7 @@ public class CalculatorFragment extends MyFragment {
                     new NotificationCompat.Builder(getContext())
                             .setSmallIcon(R.drawable.ic_error)
                             .setContentTitle("Wrong Expression")
-                            .setContentText("Texto de contenido");
+                            .setContentText(message);
 
             mNotificationManager.notify(0, mBuilder.build());
         }

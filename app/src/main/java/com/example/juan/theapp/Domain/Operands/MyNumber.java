@@ -29,6 +29,7 @@ public class MyNumber extends Token {
             num *= -1;
             return;
         }
-        if (!(leftToken instanceof Operand || leftToken instanceof OpenParenthesis)) throw new WrongExpression("");
+        if (!(leftToken instanceof Operand || leftToken instanceof OpenParenthesis))
+            throw new WrongExpression(WrongExpression.ErrorType.SYNTAX);
     }
 }

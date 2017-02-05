@@ -54,7 +54,7 @@ public class FieldTextParser {
         while (currentIndex < text.length()) {
             char currentChar = text.charAt(currentIndex);
             if (currentChar == commaChar) {
-                if (hasComma) throw new WrongExpression("Found invalid number, it has more than one comma");
+                if (hasComma) throw new WrongExpression(WrongExpression.ErrorType.SYNTAX);
                 hasComma = true;
             }
             else if (!isNumber(currentChar)) break;
@@ -68,11 +68,10 @@ public class FieldTextParser {
             currentIndex += 3;
             return new Ans();
         }
-        throw new WrongExpression("Found invalid word while parsing");
+        throw new WrongExpression(WrongExpression.ErrorType.SYNTAX);
     }
 
     public Token nextToken() throws WrongExpression {
-        if (currentIndex >= text.length()) throw new WrongExpression("Tried to parse after end of expression, index found " + currentIndex + " but text has length " + text.length());
         char currentSymbol = text.charAt(currentIndex);
         if (isNumber(currentSymbol) || currentSymbol == commaChar) {
             return readNumber();
@@ -100,7 +99,7 @@ public class FieldTextParser {
             case divChar:
                 token = new Div();
                 break;
-            default: throw new WrongExpression("Found invalid symbol while parsing: " + currentSymbol);
+            default: throw new WrongExpression(WrongExpression.ErrorType.SYNTAX);
         }
         ++currentIndex;
         return token;

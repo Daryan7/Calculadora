@@ -6,7 +6,7 @@ import com.example.juan.theapp.Domain.Exceptions.WrongExpression;
 public class OpenParenthesis extends Token {
 
     static int quantity;
-    private Token auxToken;
+    private Mul auxToken;
 
     private boolean negative;
 
@@ -15,7 +15,7 @@ public class OpenParenthesis extends Token {
         auxToken = null;
     }
 
-    public void initialToken() throws WrongExpression {
+    public void initialToken() {
     }
 
     public static void resetCounter() {
@@ -48,6 +48,7 @@ public class OpenParenthesis extends Token {
             auxToken = new Mul();
             auxToken.preExecute(leftToken);
         }
-        else if (!(leftToken instanceof Operand || leftToken instanceof OpenParenthesis)) throw new WrongExpression("");
+        else if (!(leftToken instanceof Operand || leftToken instanceof OpenParenthesis))
+            throw new WrongExpression(WrongExpression.ErrorType.SYNTAX);
     }
 }
