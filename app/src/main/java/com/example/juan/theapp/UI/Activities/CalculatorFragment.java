@@ -160,9 +160,7 @@ public class CalculatorFragment extends MyFragment {
         if (actualString.length() > numberOfSymbols) {
             actualString = actualString.substring(0, actualString.length()-numberOfSymbols);
         }
-        else {
-            actualString = "";
-        }
+        else actualString = "";
         inputField.setText(actualString);
         nextInputResets = false;
     }

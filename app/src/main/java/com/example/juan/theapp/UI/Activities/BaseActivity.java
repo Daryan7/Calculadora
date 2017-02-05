@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.juan.theapp.Data.AppDB;
 import com.example.juan.theapp.Domain.User;
@@ -34,8 +35,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstaceState);
         setContentView(R.layout.activity_base);
 
-        Log.v("d", "creando");
-
         database = new AppDB(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,21 +48,24 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        ((TextView)navigationView.getHeaderView(0).findViewById(R.id.nickView)).setText(User.getCurrentUser().getNickName());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
                 fragmentManager.beginTransaction();
-        int menuId = -1;
+        int menuId;
         if (savedInstaceState != null) {
             actualFragment = fragmentManager.getFragment(savedInstaceState, "actualFragment");
             menuId = savedInstaceState.getInt("menuId");
             menuItem = navigationView.getMenu().findItem(menuId);
-        } else if (actualFragment == null) {
+        }
+        else if (actualFragment == null) {
             Intent intent = getIntent();
             if (intent.getBooleanExtra("musicPlayer", false)) {
                 menuId = R.id.musicPlayer;
                 actualFragment = new SongPlayerFragment();
-            } else {
+            }
+            else {
                 menuId = R.id.profile;
                 actualFragment = new ProfileFragment();
             }
