@@ -1,14 +1,12 @@
 package com.example.juan.theapp.UI.Activities;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,7 +19,6 @@ import android.widget.TextView;
 
 import com.example.juan.theapp.Domain.User;
 import com.example.juan.theapp.R;
-import com.example.juan.theapp.UI.Comunication.OnFragmentInteractionListener;
 import com.example.juan.theapp.UI.CoolImageFlipper;
 
 import java.util.ArrayList;

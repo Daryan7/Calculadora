@@ -19,10 +19,10 @@ public class AppDB extends SQLiteOpenHelper {
     private static String TABLE_NAME = "ranking";
     private SQLiteDatabase database;
     private static final class Column {
-        static final String ID = "a";
-        static final String NICK = "b";
-        static final String POINTS = "c";
-        static final String IMAGE = "d";
+        static final String ID = "id";
+        static final String NICK = "nick";
+        static final String POINTS = "points";
+        static final String IMAGE = "image";
     }
 
     public AppDB(Context context) {
@@ -53,8 +53,7 @@ public class AppDB extends SQLiteOpenHelper {
         contentValues.put(Column.POINTS, user.getPoints());
         if (user.hasProfilePic()) contentValues.put(Column.IMAGE, user.getProfileImage().toString());
         contentValues.put(Column.NICK, user.getNickName());
-        long id = database.insert(TABLE_NAME, null, contentValues);
-        if (id == -1) Log.e("Database", "Something happened!");
+        database.insert(TABLE_NAME, null, contentValues);
     }
 
     public void resetPoints() {

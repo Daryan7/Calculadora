@@ -16,9 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.juan.theapp.Data.AppDB;
@@ -32,13 +30,14 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout navDrawer;
     private MenuItem menuItem;
     private AppDB database;
+    private static boolean tutorialDone = false;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
         super.onCreate(savedInstaceState);
         setContentView(R.layout.activity_base);
 
-        if (getIntent().getBooleanExtra("tutorial", false)) {
+        if (getIntent().getBooleanExtra("tutorial", false) && !tutorialDone) {
             final int[] i = {0};
             final String[] titles = getResources().getStringArray(R.array.tutorial_titles);
             final String[] content = getResources().getStringArray(R.array.tutorial_content);
@@ -67,6 +66,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             });
 
             builder.show();
+            tutorialDone = true;
         }
 
         database = new AppDB(this);

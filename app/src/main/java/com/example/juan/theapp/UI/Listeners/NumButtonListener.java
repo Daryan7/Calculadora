@@ -45,7 +45,7 @@ public class NumButtonListener extends CalculatorListeners {
                 calculator.newDigit(9);
                 break;
             default:
-                throw new Error("Invalid id: " + view.getId());
+                throw new RuntimeException("Invalid id: " + view.getId());
         }
     }
 }

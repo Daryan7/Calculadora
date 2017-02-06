@@ -1,8 +1,6 @@
 package com.example.juan.theapp.UI.Activities;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +13,6 @@ import android.view.ViewGroup;
 import com.example.juan.theapp.Data.AppDB;
 import com.example.juan.theapp.R;
 import com.example.juan.theapp.Domain.Adapters.RankingAdapter;
-import com.example.juan.theapp.UI.Comunication.OnFragmentInteractionListener;
 
 public class RankingFragment extends MyFragment {
 

@@ -32,7 +32,7 @@ public class FuncButtonListener extends CalculatorListeners {
             case R.id._equal:
                 calculator.calculate();
                 break;
-            default: throw new Error("Invalid id: " + view.getId());
+            default: throw new RuntimeException("Invalid id: " + view.getId());
         }
     }
 }

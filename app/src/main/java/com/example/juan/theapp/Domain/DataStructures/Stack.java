@@ -1,6 +1,5 @@
 package com.example.juan.theapp.Domain.DataStructures;
 
-
 public class Stack<E> {
 
     private class Node {

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -248,7 +247,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
                 Toast.makeText(getContext(), "No songs found!", Toast.LENGTH_LONG).show();
                 break;
             case NO_PERMISSION:
-                Toast.makeText(getContext(), "Access song permission denied!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Permission to read songs denied!", Toast.LENGTH_LONG).show();
                 break;
         }
         View.OnClickListener listener = new View.OnClickListener() {

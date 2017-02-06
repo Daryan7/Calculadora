@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.juan.theapp.Domain.Exceptions.MediaPlayerException;
@@ -181,10 +180,10 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             findPreviousSong();
         }
         catch (MediaPlayerException e) {
+            currentSong = 0;
             if (e.getType() == MediaPlayerException.ErrorType.READ) {
                 throw e;
             }
-            currentSong = 0;
             return;
         }
         if (wasPlaying) player.start();

@@ -2,11 +2,8 @@ package com.example.juan.theapp.Domain;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import com.example.juan.theapp.Data.AppDB;
-
-import java.io.Serializable;
 
 public class User {
     private static User currentUser;

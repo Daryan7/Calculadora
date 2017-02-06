@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -13,10 +12,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +21,9 @@ import android.widget.Toast;
 
 import com.example.juan.theapp.Domain.User;
 import com.example.juan.theapp.R;
-import com.example.juan.theapp.UI.Comunication.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.security.Permission;
-import java.security.Permissions;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileFragment extends MyFragment {
@@ -86,7 +77,6 @@ public class ProfileFragment extends MyFragment {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         final Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {
-            Log.v("2", "Found last location");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -95,7 +85,6 @@ public class ProfileFragment extends MyFragment {
             }).start();
         }
         else {
-            Log.v("3", "Not found location");
             locationListener = new LocationListener() {
                 @Override
                 public void onStatusChanged(String provider, int status,

@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_login);
+
         final SharedPreferences notificationSettings = getSharedPreferences("users", 0);
         if (notificationSettings.getBoolean("login", false)) {
             long id = notificationSettings.getLong("id", -1);
