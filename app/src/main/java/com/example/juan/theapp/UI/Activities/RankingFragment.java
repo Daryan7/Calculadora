@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.juan.theapp.Data.AppDB;
+import com.example.juan.theapp.Domain.User;
 import com.example.juan.theapp.R;
 import com.example.juan.theapp.Domain.Adapters.RankingAdapter;
 
@@ -28,6 +29,7 @@ public class RankingFragment extends MyFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_ranking, container, false);
+        getActivity().setTitle(R.string.ranking);
 
         RecyclerView list = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         list.setHasFixedSize(true);
@@ -50,8 +52,14 @@ public class RankingFragment extends MyFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.resetRanking:
-                AppDB database = mListener.getDataBase();
-                database.resetPoints();
+                final AppDB database = mListener.getDataBase();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        database.resetPoints();
+                    }
+                }).start();
+                User.getCurrentUser().setPoints(-1);
                 adapter.removeAllData();
                 return true;
             default: return super.onOptionsItemSelected(item);

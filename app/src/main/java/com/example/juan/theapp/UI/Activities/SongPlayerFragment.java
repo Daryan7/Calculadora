@@ -122,6 +122,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_song_player, container, false);
+        getActivity().setTitle(R.string.song_player);
 
         songName = (TextView) rootView.findViewById(R.id.songName);
         progressBar = (SeekBar) rootView.findViewById(R.id.songProgess);

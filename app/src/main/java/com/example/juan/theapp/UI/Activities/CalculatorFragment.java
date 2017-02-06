@@ -50,6 +50,7 @@ public class CalculatorFragment extends MyFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
+        getActivity().setTitle(R.string.calculator);
         inputField = (TextView)rootView.findViewById(R.id.input);
         outputField = (TextView)rootView.findViewById(R.id.result);
         if (savedInstanceState != null) {

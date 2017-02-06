@@ -118,8 +118,8 @@ public class ProfileFragment extends MyFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         if (mListener.checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION)) {
             setGPSLocation();
         }
@@ -129,6 +129,7 @@ public class ProfileFragment extends MyFragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        getActivity().setTitle(R.string.profile);
 
         User user = User.getCurrentUser();
         boolean hasReadPermission = mListener.checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -177,8 +178,8 @@ public class ProfileFragment extends MyFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         if (mListener.checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION) && locationListener != null) {
             locationManager.removeUpdates(locationListener);
         }

@@ -58,6 +58,7 @@ public class MemoryFragment extends MyFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_memory, container, false);
+        getActivity().setTitle(R.string.game);
         moveView = (TextView) rootView.findViewById(R.id.moves);
         flippedImage = 0;
         image1 = image2 = null;
