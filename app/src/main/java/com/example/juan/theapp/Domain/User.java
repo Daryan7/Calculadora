@@ -2,8 +2,6 @@ package com.example.juan.theapp.Domain;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 
 import com.example.juan.theapp.Data.AppDB;
@@ -57,14 +55,16 @@ public class User {
         return currentUser;
     }
 
-    public static void registerIfNotExist(Context context, String userName, long id) {
+    public static boolean registerIfNotExist(Context context, String userName, long id) {
         AppDB appDB = new AppDB(context);
         currentUser = appDB.getUserWithId(id);
-        if (currentUser == null) {
+        boolean userNull = currentUser == null;
+        if (userNull) {
             currentUser = new User(id, userName, -1, null);
             appDB.registerUser(currentUser);
         }
         appDB.close();
+        return userNull;
     }
 
     public static void logOut() {

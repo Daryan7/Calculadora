@@ -1,5 +1,6 @@
 package com.example.juan.theapp.UI.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -12,10 +13,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.juan.theapp.Data.AppDB;
@@ -34,6 +37,37 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     public void onCreate(Bundle savedInstaceState) {
         super.onCreate(savedInstaceState);
         setContentView(R.layout.activity_base);
+
+        if (getIntent().getBooleanExtra("tutorial", false)) {
+            final int[] i = {0};
+            final String[] titles = getResources().getStringArray(R.array.tutorial_titles);
+            final String[] content = getResources().getStringArray(R.array.tutorial_content);
+            final int[] imageIds = {R.mipmap.ic_launcher, R.drawable.ic_profile, R.drawable.ic_calculator, R.drawable.ic_game, R.drawable.ic_ranking, R.drawable.ic_player, R.mipmap.ic_launcher};
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(titles[0]);
+            if (imageIds[0] != -1) builder.setIcon(imageIds[0]);
+            builder.setMessage(content[0]);
+            builder.setPositiveButton("Got it!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    ++i[0];
+                    if (i[0] < titles.length) {
+                        builder.setTitle(titles[i[0]]);
+                        builder.setMessage(content[i[0]]);
+                        builder.setIcon(imageIds[i[0]]);
+                        builder.show();
+                    }
+                }
+            });
+
+            builder.show();
+        }
 
         database = new AppDB(this);
 

@@ -18,18 +18,14 @@ import com.example.juan.theapp.UI.Activities.BaseActivity;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MusicService extends Service implements MediaPlayer.OnCompletionListener {
     private MediaPlayer player;
-    private File[] songs;
+    private ArrayList<File> songs;
     private int currentSong;
     private final IBinder mBinder = new LocalBinder();
     private MusicServiceListener listener;
-
-    public enum Error {
-        READ_ERROR,
-        NO_SONGS_ERROR
-    }
 
     public interface MusicServiceListener {
         void onNewSong(File song);
@@ -50,11 +46,14 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     public File getPlayingSong() {
-        return songs[currentSong];
+        return songs.get(currentSong);
     }
 
     public void prepare(File file) throws MediaPlayerException {
-        songs = file.listFiles();
+        songs = new ArrayList<>();
+        for (File song : file.listFiles()) {
+            if (!song.isDirectory()) songs.add(song);
+        }
         currentSong = -1;
         findNextSong();
     }
@@ -69,12 +68,11 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     private void findNextSong() throws MediaPlayerException {
-        //noinspection StatementWithEmptyBody
-        while (++currentSong < songs.length && songs[currentSong].isDirectory());
-        if (currentSong  < songs.length) {
+        ++currentSong;
+        if (currentSong  < songs.size()) {
             player.reset();
             try {
-                player.setDataSource(songs[currentSong].getAbsolutePath());
+                player.setDataSource(songs.get(currentSong).getAbsolutePath());
                 player.prepare();
             }
             catch (IOException e) {
@@ -87,12 +85,11 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     public void findPreviousSong() throws MediaPlayerException {
-        //noinspection StatementWithEmptyBody
-        while (--currentSong >= 0 && songs[currentSong].isDirectory());
+        --currentSong;
         if (currentSong >= 0) {
             player.reset();
             try {
-                player.setDataSource(songs[currentSong].getAbsolutePath());
+                player.setDataSource(songs.get(currentSong).getAbsolutePath());
                 player.prepare();
             }
             catch (IOException e) {

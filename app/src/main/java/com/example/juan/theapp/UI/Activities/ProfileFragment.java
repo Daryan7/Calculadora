@@ -129,6 +129,14 @@ public class ProfileFragment extends MyFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (mListener.checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            setGPSLocation();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -148,10 +156,6 @@ public class ProfileFragment extends MyFragment {
                 user.setProfileImage(null);
                 Toast.makeText(getContext(), "Unfortunately, your profile picture can't be displayed", Toast.LENGTH_LONG).show();
             }
-        }
-
-        if (mListener.checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            setGPSLocation();
         }
 
         TextView userName = (TextView) rootView.findViewById(R.id.nickName);

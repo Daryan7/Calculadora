@@ -12,8 +12,8 @@
         android:textSize="50sp"/>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@mipmap/ic_launcher"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"/>
@@ -21,8 +21,7 @@
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:id="@+id/twitter_login_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/login"

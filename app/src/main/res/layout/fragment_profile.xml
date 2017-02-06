@@ -8,7 +8,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="#3f51b5"
+        android:background="#5c6bc0"
         android:orientation="vertical" />
 
     <LinearLayout

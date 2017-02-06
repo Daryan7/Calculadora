@@ -42,12 +42,12 @@ public class LoginActivity extends AppCompatActivity {
             User.logIn(getApplicationContext(), id);
             Intent intent = new Intent(getApplicationContext(), BaseActivity.class);
             startActivity(intent);
+            finish();
             return;
         }
 
-        String[] permissions = {"", ""};
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String[] permissions = {"", ""};
             int hasPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
             if (hasPermission != PackageManager.PERMISSION_GRANTED) {
                 permissions[0] = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -68,8 +68,9 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putLong("id", session.getUserId());
                 editor.putBoolean("login", true);
                 editor.apply();
-                User.registerIfNotExist(getApplicationContext(), session.getUserName(), session.getUserId());
+                boolean newUser = User.registerIfNotExist(getApplicationContext(), session.getUserName(), session.getUserId());
                 Intent intent = new Intent(getApplicationContext(), BaseActivity.class);
+                if (newUser) intent.putExtra("tutorial", true);
                 startActivity(intent);
                 finish();
             }
@@ -92,8 +93,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Make sure that the loginButton hears the result from any
-        // Activity that it triggered.
         loginButton.onActivityResult(requestCode, resultCode, data);
     }
 

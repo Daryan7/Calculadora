@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">The App</string>
+    <string name="app_name">Bat Box</string>
     <string name="_0">0</string>
     <string name="_1">1</string>
     <string name="_2">2</string>
@@ -43,7 +43,7 @@
     <string name="profile_position">Your current position:</string>
     <string name="default_current_position">Unknown</string>
 
-    <string name="welcome_title">Welcome to The App</string>
+    <string name="welcome_title">Welcome to Bat Box</string>
     <string name="username_hint">User name</string>
     <string name="password_hint">Password</string>
     <string name="login_button">Enter as Guest</string>
@@ -53,4 +53,24 @@
     <string name="restart_memory">Restart</string>
     <string name="reset_ranking_data">Reset ranking</string>
     <string name="has_not_played">You haven\'t played yet</string>
+
+    <string-array name="tutorial_content">
+        <item>Hello there! We see that you\'re new to Bat Box, so let\'s take a look about what you can do</item>
+        <item>In your profile, you can see your user name, your current record in memory game, and your current location (if you let us know, of course!)</item>
+        <item>We think this is very obvious, yes, it\'s a calculator, but not a simple one, you can call with it and open your internet browser!</item>
+        <item>This game will test your memory skills, flip two cards so they are equals until you find all matches!</item>
+        <item>Here you can get competitive in memory game. Your results will be shown compared to all users, it\'s time to demonstrate your true skills!</item>
+        <item>It\'s allways nice to listen to your favorite music!</item>
+        <item>So, that\'s all, we hope you enjoy this app!</item>
+    </string-array>
+
+    <string-array name="tutorial_titles">
+        <item>Welcome!</item>
+        <item>Profile</item>
+        <item>Calculator</item>
+        <item>Memory game</item>
+        <item>Ranking</item>
+        <item>Music player</item>
+        <item>Thank you!</item>
+    </string-array>
 </resources>
