@@ -51,15 +51,20 @@ public class FieldTextParser {
     private MyNumber readNumber() throws WrongExpression {
         int initialIndex = currentIndex;
         boolean hasComma = false;
+        boolean hasNumber = false;
         while (currentIndex < text.length()) {
             char currentChar = text.charAt(currentIndex);
             if (currentChar == commaChar) {
                 if (hasComma) throw new WrongExpression(WrongExpression.ErrorType.SYNTAX);
                 hasComma = true;
             }
-            else if (!isNumber(currentChar)) break;
+            else if (isNumber(currentChar)) {
+                hasNumber = true;
+            }
+            else break;
             ++currentIndex;
         }
+        if (!hasNumber) throw new WrongExpression(WrongExpression.ErrorType.SYNTAX);
         return new MyNumber(text.substring(initialIndex, currentIndex));
     }
 
@@ -72,6 +77,7 @@ public class FieldTextParser {
     }
 
     public Token nextToken() throws WrongExpression {
+        if (currentIndex >= text.length()) throw new WrongExpression(WrongExpression.ErrorType.SYNTAX);
         char currentSymbol = text.charAt(currentIndex);
         if (isNumber(currentSymbol) || currentSymbol == commaChar) {
             return readNumber();

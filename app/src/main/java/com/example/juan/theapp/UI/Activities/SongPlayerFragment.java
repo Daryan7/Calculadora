@@ -58,6 +58,7 @@ public class SongPlayerFragment extends MyFragment implements MusicService.Music
                 }
                 catch (MediaPlayerException e) {
                     onError(e);
+                    return;
                 }
             }
             else playStopButton.setImageResource(R.mipmap.ic_pause);

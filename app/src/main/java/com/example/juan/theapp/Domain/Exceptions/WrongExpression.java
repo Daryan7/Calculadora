@@ -10,10 +10,6 @@ public class WrongExpression extends Exception {
 
     private ErrorType type;
 
-    public WrongExpression(String message) {
-        super(message);
-    }
-
     public WrongExpression(ErrorType errorType) {
         this.type = errorType;
     }

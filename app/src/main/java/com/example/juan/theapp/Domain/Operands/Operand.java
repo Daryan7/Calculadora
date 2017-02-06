@@ -32,6 +32,6 @@ public abstract class Operand extends Token {
 
     @Override
     public void preExecute(Token leftToken) throws WrongExpression {
-        if (!(leftToken instanceof MyNumber || leftToken instanceof CloseParenthesis)) throw new WrongExpression("");
+        if (!(leftToken instanceof MyNumber || leftToken instanceof CloseParenthesis)) throw new WrongExpression(WrongExpression.ErrorType.SYNTAX);
     }
 }
